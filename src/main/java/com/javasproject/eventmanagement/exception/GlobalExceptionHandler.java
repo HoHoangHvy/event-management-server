@@ -1,6 +1,6 @@
 package com.javasproject.eventmanagement.exception;
 
-import com.javasproject.eventmanagement.dto.request.ApiRespone;
+import com.javasproject.eventmanagement.dto.request.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,28 +11,28 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(value = Exception.class)
-    ResponseEntity<ApiRespone> handleRuntimeException(RuntimeException e){
-        ApiRespone respone = new ApiRespone();
-        respone.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
-        respone.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
-        return ResponseEntity.badRequest().body(respone);
+    ResponseEntity<ApiResponse> handleRuntimeException(RuntimeException e){
+        ApiResponse response = new ApiResponse();
+        response.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
+        response.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    ResponseEntity<ApiRespone> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
-        ApiRespone respone = new ApiRespone();
+    ResponseEntity<ApiResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
+        ApiResponse response = new ApiResponse();
         String errorKey = e.getFieldError().getDefaultMessage();
         ErrorCode errorCode = ErrorCode.valueOf(errorKey);
-        respone.setCode(errorCode.getCode());
-        respone.setMessage(errorCode.getMessage());
-        return ResponseEntity.badRequest().body(respone);
+        response.setCode(errorCode.getCode());
+        response.setMessage(errorCode.getMessage());
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(value = AppException.class)
-    ResponseEntity<ApiRespone> handleAppException(AppException e){
-        ApiRespone respone = new ApiRespone();
-        respone.setCode(e.getErrorCode().getCode());
-        respone.setMessage(e.getErrorCode().getMessage());
-        return ResponseEntity.badRequest().body(respone);
+    ResponseEntity<ApiResponse> handleAppException(AppException e){
+        ApiResponse response = new ApiResponse();
+        response.setCode(e.getErrorCode().getCode());
+        response.setMessage(e.getErrorCode().getMessage());
+        return ResponseEntity.badRequest().body(response);
     }
 }

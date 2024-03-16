@@ -1,6 +1,5 @@
-package com.javasproject.eventmanagement.dto.request;
+package com.javasproject.eventmanagement.dto.response;
 
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,11 +10,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserCreationRequest {
-    @Size(min = 4, message = "USERNAME_INVALID_EXCEPTION")
+public class UserResponse {
+    String id;
     String userName;
-
-    @Size (min = 8, message = "PASSWORD_INVALID_EXCEPTION")
     String password;
     String firstName;
     String lastName;

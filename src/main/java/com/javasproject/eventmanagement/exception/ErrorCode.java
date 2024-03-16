@@ -5,6 +5,8 @@ public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized exception"),
     USERNAME_INVALID_EXCEPTION(102, "Username is invalid"),
     PASSWORD_INVALID_EXCEPTION(103, "Password is invalid"),
+    USER_NOT_EXIST(104, "User not exist"),
+    INVALID_CREDENTIALS(105, "Wrong credentials"),
     ;
     private int code;
     private String message;

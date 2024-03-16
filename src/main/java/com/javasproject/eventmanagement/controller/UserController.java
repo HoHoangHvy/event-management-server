@@ -1,27 +1,31 @@
 package com.javasproject.eventmanagement.controller;
 
-import com.javasproject.eventmanagement.dto.request.ApiRespone;
+import com.javasproject.eventmanagement.dto.request.ApiResponse;
 import com.javasproject.eventmanagement.dto.request.UserCreationRequest;
+import com.javasproject.eventmanagement.dto.response.UserResponse;
 import com.javasproject.eventmanagement.entity.User;
 import com.javasproject.eventmanagement.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+
 @RequestMapping("/users")
 public class UserController {
-
-    @Autowired
-    private UserService userService;
+    UserService userService;
 
     @PostMapping
-    public ApiRespone<User> createUser(@RequestBody @Valid UserCreationRequest request){
-        ApiRespone<User> respone = new ApiRespone<>();
-        respone.setData(userService.createUser(request));
-        return respone;
+    public ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest request){
+        ApiResponse<User> response = new ApiResponse<>();
+        response.setData(userService.createUser(request));
+        return response;
     }
 
     @GetMapping
@@ -30,7 +34,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable("id") String id){
+    public UserResponse getUserById(@PathVariable("id") String id){
         return userService.getUserById(id);
     }
 
