@@ -4,6 +4,7 @@ import com.javasproject.eventmanagement.dto.request.AuthenticationRequest;
 import com.javasproject.eventmanagement.dto.request.IntrospectRequest;
 import com.javasproject.eventmanagement.dto.response.AuthenticationResponse;
 import com.javasproject.eventmanagement.dto.response.IntrospectResponse;
+import com.javasproject.eventmanagement.entity.User;
 import com.javasproject.eventmanagement.exception.AppException;
 import com.javasproject.eventmanagement.exception.ErrorCode;
 import com.javasproject.eventmanagement.repository.UserRepository;
@@ -43,21 +44,22 @@ public class AuthenticationService {
             throw new AppException(ErrorCode.INVALID_CREDENTIALS);
         }
 
-        var token = generateToken(request.getUserName());
+        var token = generateToken(user);
 
         return AuthenticationResponse.builder()
                 .isAuthentic(true)
                 .token(token)
                 .build();
     }
-    private String generateToken(String userName) {
+    private String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .subject(userName)
+                .subject(user.getUserName())
                 .issuer("javasproject.com")
                 .issueTime(new java.util.Date())
                 .expirationTime(new java.util.Date(System.currentTimeMillis() + 60 * 60 * 1000))
-                .claim("userName", userName)
+                .claim("userName", user.getUserName())
+                .claim("scope", buildScope(user))
                 .build();
         Payload payload = new Payload(claimsSet.toJSONObject());
 
@@ -69,6 +71,9 @@ public class AuthenticationService {
         } catch (JOSEException e) {
             throw new RuntimeException(e);
         }
+    }
+    private String buildScope(User user) {
+        return user.getRole();
     }
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();

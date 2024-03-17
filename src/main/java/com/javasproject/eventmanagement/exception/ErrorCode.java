@@ -1,12 +1,15 @@
 package com.javasproject.eventmanagement.exception;
 
+
 public enum ErrorCode {
     USER_EXISTED(1001, "User is existed"),
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized exception"),
     USERNAME_INVALID_EXCEPTION(102, "Username is invalid"),
     PASSWORD_INVALID_EXCEPTION(103, "Password is invalid"),
     USER_NOT_EXIST(104, "User not exist"),
+    ROLE_NOT_EXIST(114, "Role not exist"),
     INVALID_CREDENTIALS(105, "Wrong credentials"),
+    ROLE_EXISTED(106, "Role is existed"),
     ;
     private int code;
     private String message;
