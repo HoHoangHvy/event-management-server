@@ -17,21 +17,20 @@ import java.util.Optional;
 public class EventDetailService {
     @Autowired
     private EventDetailRepository eventDetailRepository;
-    private final List<EventDetail> eventDetailList;
 
     public String upsert(EventDetail eventDetail){
         eventDetailRepository.save(eventDetail);
         return "success";
-    };
+    }
 
     public EventDetail getById(String id){
         Optional<EventDetail> findById = eventDetailRepository.findById(id);
         return findById.orElse(null);
-    };
+    }
 
     public List<EventDetail> getEventDetailList() {
         return eventDetailRepository.findAll();
-    };
+    }
 
     public String deleteById(String id){
         if(eventDetailRepository.existsById(id)){
@@ -41,5 +40,5 @@ public class EventDetailService {
         else {
             return "No Record Found";
         }
-    };
+    }
 }
