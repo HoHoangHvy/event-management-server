@@ -33,16 +33,16 @@ public class ContractController {
     @GetMapping("/contracts")
     public ResponseEntity<List<Contract>> getAllContracts(){
         List<Contract> allContracts = contractService.getContractList();
-        return new ResponseEntity<>(allContracts,HttpStatus.OK);
+        return new ResponseEntity<>(allContracts, HttpStatus.OK);
     }
-    @PutMapping("/contracts")
+    @PutMapping("/contract")
     public ResponseEntity<String> updateContract(@RequestBody  Contract contract){
         String status = contractService.upsert(contract);
         return new ResponseEntity<>(status, HttpStatus.OK);
     }
-    @DeleteMapping("/contracts/{id}")
+    @DeleteMapping("/contract/{id}")
     public ResponseEntity<String> deleteContract(@PathVariable String id){
         String status = contractService.deleteById(id);
-        return new ResponseEntity<>(status,HttpStatus.OK);
+        return new ResponseEntity<>(status, HttpStatus.OK);
     }
 }
