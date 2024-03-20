@@ -17,7 +17,6 @@ import java.util.Optional;
 public class ContractService {
     @Autowired
     private ContractRepository contractRepository;
-    private final List<Contract> contractList;
 
     public String upsert(Contract contract){
         contractRepository.save(contract);
@@ -26,10 +25,11 @@ public class ContractService {
     public Contract getById(String id){
         Optional<Contract> findById = contractRepository.findById(id);
         return findById.orElse(null);
-    };
+    }
     public List<Contract> getContractList(){
+
         return contractRepository.findAll();
-    };
+    }
     public String deleteById(String id){
         if(contractRepository.existsById(id)){
             contractRepository.deleteById(id);
@@ -39,7 +39,7 @@ public class ContractService {
             return "No Record Found";
         }
 
-    };
+    }
 
 
 }
