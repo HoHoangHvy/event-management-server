@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "customers")
 @Data
@@ -19,4 +21,5 @@ public class Customers {
     String phone;
     String email;
     String type;
+    Date dob;
 }
