@@ -13,6 +13,8 @@ import lombok.experimental.FieldDefaults;
 public class ApiResponse<T> {
     @Builder.Default
     int code = 100;
+    @Builder.Default
+    boolean success = true;
     String message;
     T data;
 }
