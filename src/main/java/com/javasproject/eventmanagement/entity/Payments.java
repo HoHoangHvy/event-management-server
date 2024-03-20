@@ -4,22 +4,21 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "customers")
+@Table(name = "payments")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@FieldDefaults( level = AccessLevel.PRIVATE)
-public class Customers {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class Payments {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String name;
-    String phone;
-    String email;
     String type;
-    Date dob;
+    LocalDate paymentDate;
+    int value;
 }
