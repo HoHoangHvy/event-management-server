@@ -1,15 +1,12 @@
 package com.javasproject.eventmanagement.controller;
 
 import com.javasproject.eventmanagement.dto.request.ApiResponse;
-import com.javasproject.eventmanagement.entity.Contract;
 import com.javasproject.eventmanagement.entity.EventDetail;
 import com.javasproject.eventmanagement.service.EventDetailService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
