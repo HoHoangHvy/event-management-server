@@ -1,5 +1,6 @@
 package com.javasproject.eventmanagement.controller;
 
+import com.javasproject.eventmanagement.dto.request.ApiResponse;
 import com.javasproject.eventmanagement.entity.Contract;
 import com.javasproject.eventmanagement.service.ContractService;
 import lombok.AccessLevel;
@@ -8,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,33 +16,56 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequestMapping("/contractPage")
+@RequestMapping("/contracts")
 public class ContractController {
     @Autowired
-    private ContractService contractService;
-    @PostMapping("/contract")
-    public ResponseEntity<String> createContract(@RequestBody  Contract contract){
-        String status = contractService.upsert(contract);
-        return new ResponseEntity<>(status, HttpStatus.CREATED);
+    ContractService contractService;
+    @PostMapping
+    public ApiResponse<Contract> createContract(@RequestBody  Contract contract){
+        return ApiResponse.<Contract>builder()
+                .data(contractService.upsert(contract))
+                .build();
     }
-    @GetMapping("/contract/{id}")
-    public ResponseEntity<Contract> getContract(@PathVariable String id){
+    @GetMapping("/{id}")
+    public ApiResponse<Contract> getContractById(@PathVariable String id){
+        String message = "Successfully get the contract";
         Contract contract = contractService.getById(id);
-        return new ResponseEntity<>(contract, HttpStatus.OK);
+        if (contract == null){
+            message = "Not found this contract";
+        }
+        return ApiResponse.<Contract>builder()
+                .data(contract)
+                .message(message)
+                .build();
     }
-    @GetMapping("/contracts")
-    public ResponseEntity<List<Contract>> getAllContracts(){
-        List<Contract> allContracts = contractService.getContractList();
-        return new ResponseEntity<>(allContracts, HttpStatus.OK);
+    @GetMapping
+    public ApiResponse<List<Contract>> getAllContracts(){
+        String message = "Successfully get the contract list";
+        List<Contract> contractList = contractService.getContractList();
+        if(contractList.isEmpty()){
+            message = "Contracts list is empty";
+
+        }
+        return ApiResponse.<List<Contract>>builder()
+                .data(contractList)
+                .message(message)
+                .build();
     }
-    @PutMapping("/contract")
-    public ResponseEntity<String> updateContract(@RequestBody  Contract contract){
-        String status = contractService.upsert(contract);
-        return new ResponseEntity<>(status, HttpStatus.OK);
+    @PutMapping
+    public ApiResponse<Contract> updateContract(@RequestBody  Contract contract){
+        return ApiResponse.<Contract>builder()
+                .data(contractService.upsert(contract))
+                .build();
     }
-    @DeleteMapping("/contract/{id}")
-    public ResponseEntity<String> deleteContract(@PathVariable String id){
-        String status = contractService.deleteById(id);
-        return new ResponseEntity<>(status, HttpStatus.OK);
+    @DeleteMapping("/{id}")
+    public ApiResponse<String> deleteContract(@PathVariable String id){
+        String message = "Delete successfully";
+        Boolean status = contractService.deleteById(id);
+        if (!status){
+            message = "Delete fail! Not found this record";
+        }
+        return ApiResponse.<String>builder()
+                .message(message)
+                .build();
     }
 }

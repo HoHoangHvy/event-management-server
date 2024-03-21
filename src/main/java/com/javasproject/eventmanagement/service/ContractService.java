@@ -16,11 +16,10 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ContractService {
     @Autowired
-    private ContractRepository contractRepository;
+    ContractRepository contractRepository;
 
-    public String upsert(Contract contract){
-        contractRepository.save(contract);
-        return "success";
+    public Contract upsert(Contract contract){
+        return contractRepository.save(contract);
     }
     public Contract getById(String id){
         Optional<Contract> findById = contractRepository.findById(id);
@@ -30,13 +29,13 @@ public class ContractService {
 
         return contractRepository.findAll();
     }
-    public String deleteById(String id){
+    public Boolean deleteById(String id){
         if(contractRepository.existsById(id)){
             contractRepository.deleteById(id);
-            return "Delete Success";
+            return true;
         }
         else {
-            return "No Record Found";
+            return false;
         }
 
     }
