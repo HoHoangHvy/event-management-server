@@ -27,7 +27,7 @@ public class ApplicationInitConfig {
                 User admin = User.builder()
                         .userName("admin")
                         .password(passwordEncoder.encode("admin123"))
-                        .role(RoleEnum.ADMIN.name())
+                        .role(RoleEnum.valueOf(RoleEnum.ADMIN.name()))
                         .build();
                 userRepository.save(admin);
                 log.warn("Successfully created admin user");

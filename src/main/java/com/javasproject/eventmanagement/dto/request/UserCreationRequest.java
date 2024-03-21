@@ -1,5 +1,6 @@
 package com.javasproject.eventmanagement.dto.request;
 
+import com.javasproject.eventmanagement.enums.RoleEnum;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -21,4 +22,5 @@ public class UserCreationRequest {
     String lastName;
     LocalDate dateOfBirth;
     String status;
+    RoleEnum role;
 }

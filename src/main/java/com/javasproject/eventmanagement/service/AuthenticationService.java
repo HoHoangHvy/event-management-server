@@ -5,6 +5,7 @@ import com.javasproject.eventmanagement.dto.request.IntrospectRequest;
 import com.javasproject.eventmanagement.dto.response.AuthenticationResponse;
 import com.javasproject.eventmanagement.dto.response.IntrospectResponse;
 import com.javasproject.eventmanagement.entity.User;
+import com.javasproject.eventmanagement.enums.RoleEnum;
 import com.javasproject.eventmanagement.exception.AppException;
 import com.javasproject.eventmanagement.exception.ErrorCode;
 import com.javasproject.eventmanagement.repository.UserRepository;
@@ -72,7 +73,7 @@ public class AuthenticationService {
             throw new RuntimeException(e);
         }
     }
-    private String buildScope(User user) {
+    private RoleEnum buildScope(User user) {
         return user.getRole();
     }
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {

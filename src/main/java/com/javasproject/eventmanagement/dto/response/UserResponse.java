@@ -1,5 +1,6 @@
 package com.javasproject.eventmanagement.dto.response;
 
+import com.javasproject.eventmanagement.enums.RoleEnum;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -17,5 +18,5 @@ public class UserResponse {
     String lastName;
     LocalDate dateOfBirth;
     String status;
-    String role;
+    RoleEnum role;
 }
