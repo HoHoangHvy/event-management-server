@@ -18,9 +18,8 @@ public class EventDetailService {
     @Autowired
     private EventDetailRepository eventDetailRepository;
 
-    public String upsert(EventDetail eventDetail){
-        eventDetailRepository.save(eventDetail);
-        return "success";
+    public EventDetail upsert(EventDetail eventDetail){
+        return eventDetailRepository.save(eventDetail);
     }
 
     public EventDetail getById(String id){
@@ -32,13 +31,13 @@ public class EventDetailService {
         return eventDetailRepository.findAll();
     }
 
-    public String deleteById(String id){
+    public Boolean deleteById(String id){
         if(eventDetailRepository.existsById(id)){
             eventDetailRepository.deleteById(id);
-            return "Delete Success";
+            return true;
         }
         else {
-            return "No Record Found";
+            return false;
         }
     }
 }
