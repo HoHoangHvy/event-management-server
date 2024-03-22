@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Payments {
+public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
@@ -21,4 +21,6 @@ public class Payments {
     String type;
     LocalDate paymentDate;
     int value;
+    String createdBy;
+    String idContract;
 }
