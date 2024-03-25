@@ -50,7 +50,7 @@ public class ThirdPartyController {
                 .build();
     }
     @PutMapping
-    public ApiResponse<ThirdParty> updateThirdParty(@RequestBody  ThirdParty thirdParty){
+    public ApiResponse<ThirdParty> updateThirdParty(@RequestBody ThirdParty thirdParty){
         return ApiResponse.<ThirdParty>builder()
                 .data(thirdPartyService.upsert(thirdParty))
                 .build();

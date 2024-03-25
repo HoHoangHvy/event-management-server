@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "dishes")
 @Data
@@ -19,4 +22,7 @@ public class Dish {
     long price;
     long cost;
     String unit;
+    @ManyToMany(mappedBy = "dishes", cascade = CascadeType.ALL)
+    private Set<EventDetails> eventDetails = new HashSet<>();
+
 }
