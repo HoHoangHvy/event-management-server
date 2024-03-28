@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "customers")
@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @FieldDefaults( level = AccessLevel.PRIVATE)
-public class Customers {
+public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
@@ -21,5 +21,5 @@ public class Customers {
     String phone;
     String email;
     String type;
-    Date dob;
+    LocalDate dob;
 }
