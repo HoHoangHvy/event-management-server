@@ -3,6 +3,7 @@ package com.javasproject.eventmanagement.service;
 import com.javasproject.eventmanagement.dto.request.UserCreationRequest;
 import com.javasproject.eventmanagement.dto.response.UserResponse;
 import com.javasproject.eventmanagement.entity.User;
+import com.javasproject.eventmanagement.enums.Permission;
 import com.javasproject.eventmanagement.enums.RoleEnum;
 import com.javasproject.eventmanagement.exception.AppException;
 import com.javasproject.eventmanagement.exception.ErrorCode;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,8 +33,11 @@ public class UserService {
         }
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        String role = RoleEnum.USER.name();
-        user.setRole(role);
+        if(request.getRole() != null){
+            user.setRole(RoleEnum.valueOf(String.valueOf(request.getRole())));
+        } else {
+            user.setRole(RoleEnum.valueOf(RoleEnum.USER.name()));
+        }
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
@@ -73,5 +78,15 @@ public class UserService {
 
     public void deleteUser(String id){
         userRepository.deleteById(id);
+    }
+    public UserResponse getUserByUserName(String userName){
+        return userMapper.toUserResponse(userRepository.findByUserName(userName).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXIST)));
+    }
+    public Set<Permission> getUserPermission(String id){
+        User user = userRepository.findById(id).orElse(null);
+        if(user != null){
+            return user.getRole().getPermissions();
+        }
+        return null;
     }
 }
