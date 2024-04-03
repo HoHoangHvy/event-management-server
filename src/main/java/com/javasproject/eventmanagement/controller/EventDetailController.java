@@ -1,7 +1,7 @@
 package com.javasproject.eventmanagement.controller;
 
 import com.javasproject.eventmanagement.dto.request.ApiResponse;
-import com.javasproject.eventmanagement.entity.EventDetail;
+import com.javasproject.eventmanagement.entity.EventDetails;
 import com.javasproject.eventmanagement.service.EventDetailService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -19,43 +19,43 @@ public class EventDetailController {
     @Autowired
     private EventDetailService eventDetailService;
     @PostMapping
-    public ApiResponse<EventDetail> createEventDetail(@RequestBody EventDetail eventDetail){
-        return ApiResponse.<EventDetail>builder()
-                .data(eventDetailService.upsert(eventDetail))
+    public ApiResponse<EventDetails> createEventDetail(@RequestBody EventDetails eventDetails){
+        return ApiResponse.<EventDetails>builder()
+                .data(eventDetailService.upsert(eventDetails))
                 .build();
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<EventDetail> getEventDetailById(@PathVariable String id){
+    public ApiResponse<EventDetails> getEventDetailById(@PathVariable String id){
         String message = "Successfully get the event detail";
-        EventDetail eventDetail = eventDetailService.getById(id);
-        if (eventDetail == null){
+        EventDetails eventDetails = eventDetailService.getById(id);
+        if (eventDetails == null){
             message = "Not found this event detail";
         }
-        return ApiResponse.<EventDetail>builder()
-                .data(eventDetail)
+        return ApiResponse.<EventDetails>builder()
+                .data(eventDetails)
                 .message(message)
                 .build();
     }
 
     @GetMapping
-    public ApiResponse<List<EventDetail>> getEventDetailList(){
+    public ApiResponse<List<EventDetails>> getEventDetailList(){
         String message = "Successfully get the event detail list";
-        List<EventDetail> eventDetailList = eventDetailService.getEventDetailList();
-        if(eventDetailList.isEmpty()){
+        List<EventDetails> eventDetailsList = eventDetailService.getEventDetailList();
+        if(eventDetailsList.isEmpty()){
             message = "Event detail list is empty";
 
         }
-        return ApiResponse.<List<EventDetail>>builder()
-                .data(eventDetailList)
+        return ApiResponse.<List<EventDetails>>builder()
+                .data(eventDetailsList)
                 .message(message)
                 .build();
     }
 
     @PutMapping
-    public ApiResponse<EventDetail> updateEventDetail(@RequestBody EventDetail eventDetail){
-        return ApiResponse.<EventDetail>builder()
-                .data(eventDetailService.upsert(eventDetail))
+    public ApiResponse<EventDetails> updateEventDetail(@RequestBody EventDetails eventDetails){
+        return ApiResponse.<EventDetails>builder()
+                .data(eventDetailService.upsert(eventDetails))
                 .build();
     }
 

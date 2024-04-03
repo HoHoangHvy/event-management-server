@@ -19,11 +19,11 @@ public class EmployeeService {
 
         employee.setName(request.getName());
         employee.setPhone(request.getPhone());
-        employee.setLevel(request.getLevel());
+        employee.setEmpLevel(request.getEmpLevel());
         employee.setGender(request.getGender());
         employee.setStatus(request.getStatus());
         employee.setStartDate(request.getStartDate());
-        employee.setDoB(request.getDoB());
+        employee.setDob(request.getDoB());
 
         return employeeRepository.save(employee);
     }
@@ -32,11 +32,11 @@ public class EmployeeService {
         Employee employee = new Employee();
 
         employee.setPhone(request.getPhone());
-        employee.setLevel(request.getLevel());
+        employee.setEmpLevel(request.getEmpLevel());
         employee.setGender(request.getGender());
         employee.setStatus(request.getStatus());
         employee.setStartDate(request.getStartDate());
-        employee.setDoB(request.getDoB());
+        employee.setDob(request.getDob());
 
         return employeeRepository.save(employee);
     }

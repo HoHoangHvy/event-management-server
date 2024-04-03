@@ -5,7 +5,8 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 public class EmployeeCreationRequest {
     String name;
     String phone;
-    String level;
+    String empLevel;
     String gender;
     String status;
     LocalDate doB;

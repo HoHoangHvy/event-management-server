@@ -25,8 +25,6 @@ public class PaymentService {
         payment.setType(request.getType());
         payment.setPaymentDate(request.getPaymentDate());
         payment.setValue(request.getValue());
-        payment.setCreatedBy(request.getCreatedBy());
-        payment.setIdContract(request.getIdContract());
 
         return paymentRepository.save(payment);
     }
@@ -46,8 +44,6 @@ public class PaymentService {
         payment.setType(request.getType());
         payment.setPaymentDate(request.getPaymentDate());
         payment.setValue(request.getValue());
-        payment.setCreatedBy(request.getCreatedBy());
-        payment.setIdContract(request.getIdContract());
 
         return paymentRepository.save(payment);
     }

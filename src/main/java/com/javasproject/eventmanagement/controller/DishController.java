@@ -19,7 +19,7 @@ public class DishController {
     @Autowired
     DishService dishService;
     @PostMapping
-    public ApiResponse<Dish> createDish(@RequestBody  Dish dish){
+    public ApiResponse<Dish> createDish(@RequestBody Dish dish){
         return ApiResponse.<Dish>builder()
                 .data(dishService.upsert(dish))
                 .build();

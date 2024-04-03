@@ -3,7 +3,8 @@ package com.javasproject.eventmanagement.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -11,9 +12,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PaymentCreationRequest {
+public class EventCreationRequest {
     String name;
-    String type;
-    LocalDate paymentDate;
-    int value;
+    LocalDateTime startDate;
+    LocalDateTime endDate;
+    String description;
+    Set<EventDetailCreationRequest> eventDetails;
 }

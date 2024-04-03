@@ -1,11 +1,14 @@
 package com.javasproject.eventmanagement.dto.response;
 
+import com.javasproject.eventmanagement.entity.Role;
+import com.javasproject.eventmanagement.enums.RoleEnum;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -17,5 +20,5 @@ public class UserResponse {
     String lastName;
     LocalDate dateOfBirth;
     String status;
-    String role;
+    RoleResponse role;
 }

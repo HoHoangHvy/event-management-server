@@ -4,16 +4,20 @@ import com.javasproject.eventmanagement.dto.request.ApiResponse;
 import com.javasproject.eventmanagement.dto.request.UserCreationRequest;
 import com.javasproject.eventmanagement.dto.response.UserResponse;
 import com.javasproject.eventmanagement.entity.User;
+import com.javasproject.eventmanagement.enums.Permission;
 import com.javasproject.eventmanagement.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -55,6 +59,18 @@ public class UserController {
         userService.deleteUser(id);
     }
 
+    @GetMapping("/me")
+    public Map<String, Object> getMe(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        UserResponse userResponse = userService.getUserByUserName(currentUsername);
+
+        Set<String> permissions = userResponse.getRole().getPermission();
+        return Map.of(
+                "userDetail", userResponse,
+                "permissions", permissions
+        );
+    }
 //    @PostMapping("/assign-role")
 //    public ApiResponse<Boolean> assignRole(@RequestBody AssignRoleRequest request){
 //        ApiResponse<Boolean> response = new ApiResponse<>();

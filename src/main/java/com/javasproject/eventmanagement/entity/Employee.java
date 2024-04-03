@@ -8,7 +8,8 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "employees")
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -16,12 +17,24 @@ import java.time.LocalDate;
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(nullable = false)
     String id;
     String name;
     String phone;
-    String level;
+    String empLevel;
     String gender;
     String status;
-    LocalDate doB;
+    LocalDate dob;
     LocalDate startDate;
+
+    @OneToOne(mappedBy = "employee")
+    User user;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "idDepartment")
+    Department department;
+
+    @OneToOne(mappedBy = "employee")
+    Task task;
+
 }

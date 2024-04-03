@@ -7,30 +7,32 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "payments")
-@Setter
+@Table(name = "tasks")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Payment {
+public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String name;
     String type;
     String status;
-    LocalDate paymentDate;
-    String paymentMethod;
-    long value;
+    LocalDate startDate;
+    LocalDate dueDate;
+    LocalDate finishedDate;
+    String priority;
+    String description;
+    String progress;
+
     @ManyToOne
-    @JoinColumn(name = "createdBy")
-    Employee createdBy;
-    @ManyToOne
-    @JoinColumn(name = "confirmedBy")
-    Employee confirmedBy;
-    @ManyToOne
-    @JoinColumn(name = "contractId")
-    Contract contract;
+    @JoinColumn(name = "idEvent")
+    Event events;
+
+    @OneToOne
+    @JoinColumn(name = "idEmployee")
+    Employee employee;
 }

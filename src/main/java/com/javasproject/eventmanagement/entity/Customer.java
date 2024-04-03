@@ -5,10 +5,12 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Table(name = "customers")
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -22,4 +24,6 @@ public class Customer {
     String email;
     String type;
     LocalDate dob;
+    @OneToMany(mappedBy = "customer")
+    Set<Event> events;
 }

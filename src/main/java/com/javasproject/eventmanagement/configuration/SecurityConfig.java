@@ -1,5 +1,6 @@
 package com.javasproject.eventmanagement.configuration;
 
+import com.javasproject.eventmanagement.enums.Permission;
 import com.javasproject.eventmanagement.enums.RoleEnum;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +24,6 @@ import javax.crypto.spec.SecretKeySpec;
 @EnableWebSecurity
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = {
-            "/users",
             "/auth/token",
             "/auth/introspect"
     };
@@ -34,8 +34,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(request ->
                 request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users")
-                        .hasRole(RoleEnum.ADMIN.name())
+                        .requestMatchers("/users").hasAnyRole("ADMIN")
                         .anyRequest().authenticated()
         );
 

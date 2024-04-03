@@ -1,12 +1,17 @@
 package com.javasproject.eventmanagement.dto.request;
 
+import com.javasproject.eventmanagement.entity.Role;
+import com.javasproject.eventmanagement.enums.RoleEnum;
+import com.javasproject.eventmanagement.service.RoleService;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -21,4 +26,5 @@ public class UserCreationRequest {
     String lastName;
     LocalDate dateOfBirth;
     String status;
+    String roleId;
 }

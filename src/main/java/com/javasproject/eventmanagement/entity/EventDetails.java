@@ -8,22 +8,28 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "dishes")
-@Getter
+@Table(name = "eventdetails")
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Dish {
+public class EventDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String name;
     long price;
     long cost;
-    String unit;
-    @ManyToMany(mappedBy = "dishes", cascade = CascadeType.ALL)
-    private Set<EventDetails> eventDetails = new HashSet<>();
-
+    String type;
+    @ManyToOne
+    @JoinColumn(name = "idEvent")
+    Event events;
+    @ManyToMany(cascade = CascadeType.ALL)
+    Set<ThirdParty> thirdparties = new HashSet<>();
+    @ManyToMany(cascade = CascadeType.ALL)
+    Set<Facility> facilities = new HashSet<>();
+    @ManyToMany(cascade = CascadeType.ALL)
+    Set<Dish> dishes = new HashSet<>();
 }
