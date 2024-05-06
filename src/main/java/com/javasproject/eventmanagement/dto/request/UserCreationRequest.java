@@ -1,5 +1,6 @@
 package com.javasproject.eventmanagement.dto.request;
 
+import com.javasproject.eventmanagement.entity.Employee;
 import com.javasproject.eventmanagement.entity.Role;
 import com.javasproject.eventmanagement.enums.RoleEnum;
 import com.javasproject.eventmanagement.service.RoleService;
@@ -22,9 +23,7 @@ public class UserCreationRequest {
 
     @Size (min = 8, message = "PASSWORD_INVALID_EXCEPTION")
     String password;
-    String firstName;
-    String lastName;
-    LocalDate dateOfBirth;
     String status;
     String roleId;
+    Employee employee;
 }

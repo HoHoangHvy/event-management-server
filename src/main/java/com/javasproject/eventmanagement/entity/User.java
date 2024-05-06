@@ -33,6 +33,7 @@ public class User {
     @OneToOne
     @JoinColumn(name = "idEmployee")
     Employee employee;
+    
 
     public void setRole(Optional<Role> adminRole) {
         role = adminRole.orElse(null);

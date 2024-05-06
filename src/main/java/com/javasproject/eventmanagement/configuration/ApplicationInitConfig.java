@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -37,8 +38,9 @@ public class ApplicationInitConfig {
                 if(adminRole.isEmpty()){
                     RoleCreationRequest roleCreationRequest = new RoleCreationRequest();
                     roleCreationRequest.setName("ADMIN");
-                    Set<String> permissions = new HashSet<>();
-                    permissions.add("ADMIN");
+                    Map<String, Map<String, Boolean>> permissions = Map.of(
+                            "ALL", Map.of("VIEW", true, "UPSERT", true, "DELETE", true)
+                    );
                     roleCreationRequest.setPermission(permissions);
                     adminRole = Optional.ofNullable(roleService.create(roleCreationRequest));
                 }

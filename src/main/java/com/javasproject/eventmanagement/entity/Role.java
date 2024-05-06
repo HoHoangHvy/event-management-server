@@ -1,6 +1,7 @@
 package com.javasproject.eventmanagement.entity;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Setter
@@ -23,20 +25,22 @@ public class Role  {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String name;
+    @Lob
+    @Column
     String permission;
     @OneToMany(mappedBy = "role")
     Set<User> users;
 
-    public Set<String> getPermission() {
+    public Map<String, Map<String, Boolean>> getPermission() {
         if(this.permission != null){
-            ObjectMapper objectMapper = new ObjectMapper();
+            ObjectMapper mapper = new ObjectMapper();
             try {
-                return new HashSet<String>(objectMapper.readValue(permission, HashSet.class));
-            } catch (JsonProcessingException e) {
+                TypeReference<Map<String, Map<String, Boolean>>> typeRef = new TypeReference<>() {};
+                return mapper.readValue(permission, typeRef);
+            } catch (Exception e) {
                 e.printStackTrace();
-                return null;
             }
         }
-        return new HashSet<>();
+        return null;
     }
 }

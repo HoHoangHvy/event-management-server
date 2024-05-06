@@ -1,6 +1,7 @@
 package com.javasproject.eventmanagement.service;
 
 import com.javasproject.eventmanagement.dto.request.RoleCreationRequest;
+import com.javasproject.eventmanagement.dto.response.RoleResponse;
 import com.javasproject.eventmanagement.entity.Role;
 import com.javasproject.eventmanagement.exception.AppException;
 import com.javasproject.eventmanagement.exception.ErrorCode;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +37,7 @@ public class RoleService {
         return roleRepository.findById(id).orElse(null);
     }
 
-    public Role update(String id, RoleCreationRequest entity) {
+    public RoleResponse update(String id, RoleCreationRequest entity) {
         Role role = roleRepository.findById(id).orElse(null);
         if(role != null){
             if(roleRepository.existsByName(entity.getName())){
@@ -43,7 +45,7 @@ public class RoleService {
             }
             role.setName(entity.getName());
             role.setPermission(entity.getPermission());
-            return roleRepository.save(role);
+            return roleMapper.toRoleResponse(roleRepository.save(role));
         }
         return null;
     }
@@ -53,8 +55,8 @@ public class RoleService {
             roleRepository.deleteById(id);
         }
     }
-    public List<Role> findAll() {
-        return  roleRepository.findAll();
+    public List<RoleResponse> findAll() {
+        return roleRepository.findAll().stream().map(roleMapper::toRoleResponse).collect(Collectors.toList());
     }
     public Optional<Role> findByName(String name){
         return roleRepository.findByName(name);

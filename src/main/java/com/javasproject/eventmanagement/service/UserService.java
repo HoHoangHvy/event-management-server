@@ -1,8 +1,10 @@
 package com.javasproject.eventmanagement.service;
 
+import com.javasproject.eventmanagement.dto.request.ChangePasswordRequest;
 import com.javasproject.eventmanagement.dto.request.RoleCreationRequest;
 import com.javasproject.eventmanagement.dto.request.UserCreationRequest;
 import com.javasproject.eventmanagement.dto.response.UserResponse;
+import com.javasproject.eventmanagement.entity.Employee;
 import com.javasproject.eventmanagement.entity.Role;
 import com.javasproject.eventmanagement.entity.User;
 import com.javasproject.eventmanagement.enums.Permission;
@@ -14,6 +16,8 @@ import com.javasproject.eventmanagement.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +34,7 @@ public class UserService {
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
     RoleService roleService;
+    @PreAuthorize("hasRole('ADMIN')")
     public UserResponse createUser(UserCreationRequest request){
         if(userRepository.existsByUserName(request.getUserName())){
             throw new AppException(ErrorCode.USER_EXISTED);
@@ -40,18 +45,20 @@ public class UserService {
             Role role = roleService.findById(request.getRoleId());
             user.setRole(Optional.of(role));
         }
+        user.setEmployee(request.getEmployee());
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getAllUsers(){
         return userRepository.findAll().stream().map(userMapper::toUserResponse).collect(Collectors.toList());
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public UserResponse getUserById(String id){
         return userMapper.toUserResponse(userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found")));
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     public User updateUser(String id, UserCreationRequest request){
         User user = userRepository.findById(id).orElse(null);
         if(user != null){
@@ -89,5 +96,20 @@ public class UserService {
 //            return user.getRole().getPermissions();
 //        }
         return null;
+    }
+
+    public boolean changePassword(ChangePasswordRequest request){
+        User user = userRepository.findById(request.getId()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXIST));
+        if(user != null){
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+            boolean authenticated = passwordEncoder.matches(request.getOldPassword(), user.getPassword());
+            if(!authenticated){
+                throw new AppException(ErrorCode.INVALID_CREDENTIALS);
+            }
+            user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+            userRepository.save(user);
+            return true;
+        }
+        return false;
     }
 }

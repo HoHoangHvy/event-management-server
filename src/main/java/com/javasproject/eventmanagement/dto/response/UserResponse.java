@@ -16,9 +16,7 @@ import java.time.LocalDate;
 public class UserResponse {
     String id;
     String userName;
-    String firstName;
-    String lastName;
-    LocalDate dateOfBirth;
     String status;
     RoleResponse role;
+    EmployeeResponse employee;
 }

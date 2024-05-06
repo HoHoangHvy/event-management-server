@@ -1,16 +1,19 @@
-package com.javasproject.eventmanagement.dto.request;
+package com.javasproject.eventmanagement.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
-@Setter
+
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class EmployeeUpdateRequest {
+public class EmployeeResponse {
+    String id;
+    String name;
     String phone;
     String empLevel;
     String gender;
@@ -18,6 +21,4 @@ public class EmployeeUpdateRequest {
     LocalDate dob;
     LocalDate startDate;
     String email;
-    String name;
-
 }

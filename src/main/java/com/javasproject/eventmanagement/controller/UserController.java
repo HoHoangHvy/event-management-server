@@ -58,19 +58,6 @@ public class UserController {
     public void deleteUser(@PathVariable("id") String id){
         userService.deleteUser(id);
     }
-
-    @GetMapping("/me")
-    public Map<String, Object> getMe(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-        UserResponse userResponse = userService.getUserByUserName(currentUsername);
-
-        Set<String> permissions = userResponse.getRole().getPermission();
-        return Map.of(
-                "userDetail", userResponse,
-                "permissions", permissions
-        );
-    }
 //    @PostMapping("/assign-role")
 //    public ApiResponse<Boolean> assignRole(@RequestBody AssignRoleRequest request){
 //        ApiResponse<Boolean> response = new ApiResponse<>();

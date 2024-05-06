@@ -19,4 +19,6 @@ public class EmployeeCreationRequest {
     String status;
     LocalDate doB;
     LocalDate startDate;
+    String email;
+    String roleId;
 }

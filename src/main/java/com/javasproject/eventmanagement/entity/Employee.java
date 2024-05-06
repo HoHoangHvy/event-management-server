@@ -26,6 +26,7 @@ public class Employee {
     String status;
     LocalDate dob;
     LocalDate startDate;
+    String email;
 
     @OneToOne(mappedBy = "employee")
     User user;

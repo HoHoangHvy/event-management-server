@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Map;
 import java.util.Set;
 
 @Setter
@@ -14,8 +15,9 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoleCreationRequest {
+    String id;
     String name;
-    Set<String> permission;
+    Map<String, Map<String, Boolean>> permission;
 
     public String getPermission() {
         ObjectMapper objectMapper = new ObjectMapper();

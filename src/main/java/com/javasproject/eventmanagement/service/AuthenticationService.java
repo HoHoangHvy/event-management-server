@@ -23,9 +23,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Map;
+import java.util.StringJoiner;
 
 @Service
 @RequiredArgsConstructor
@@ -75,7 +78,18 @@ public class AuthenticationService {
         }
     }
     private String buildScope(User user) {
-        return user.getRole().getName();
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        stringJoiner.add("ROLE_" + user.getRole().getName());
+        if(user.getRole() != null && !CollectionUtils.isEmpty(user.getRole().getPermission())){
+            for (Map.Entry<String, Map<String, Boolean>> entry : user.getRole().getPermission().entrySet()) {
+                String k = entry.getKey();
+                Map<String, Boolean> v = entry.getValue();
+                for(Map.Entry<String, Boolean> entry2 : v.entrySet()){
+                    if(entry2.getValue()) stringJoiner.add(entry2.getKey() +'_'+ k);
+                }
+            }
+        }
+        return stringJoiner.toString();
     }
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
