@@ -1,8 +1,10 @@
 package com.javasproject.eventmanagement.configuration;
 
+import com.javasproject.eventmanagement.dto.request.RoleCreationRequest;
+import com.javasproject.eventmanagement.entity.Role;
 import com.javasproject.eventmanagement.entity.User;
-import com.javasproject.eventmanagement.enums.RoleEnum;
 import com.javasproject.eventmanagement.repository.UserRepository;
+import com.javasproject.eventmanagement.service.RoleService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -12,6 +14,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
 @Configuration
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -19,16 +26,25 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class ApplicationInitConfig {
 
     PasswordEncoder passwordEncoder;
-
+    RoleService roleService;
     @Bean
     ApplicationRunner applicationRunner(UserRepository userRepository) {
         return args -> {
             if(userRepository.findByUserName("admin").isEmpty()){
-                User admin = User.builder()
-                        .userName("admin")
-                        .password(passwordEncoder.encode("admin123"))
-                        .role(RoleEnum.valueOf(RoleEnum.ADMIN.name()))
-                        .build();
+                User admin = new User();
+                admin.setUserName("admin");
+                admin.setPassword(passwordEncoder.encode("admin123"));
+                Optional<Role> adminRole = roleService.findByName("ADMIN");
+                if(adminRole.isEmpty()){
+                    RoleCreationRequest roleCreationRequest = new RoleCreationRequest();
+                    roleCreationRequest.setName("ADMIN");
+                    Map<String, Map<String, Boolean>> permissions = Map.of(
+                            "ALL", Map.of("VIEW", true, "UPSERT", true, "DELETE", true)
+                    );
+                    roleCreationRequest.setPermission(permissions);
+                    adminRole = Optional.ofNullable(roleService.create(roleCreationRequest));
+                }
+                admin.setRole(adminRole);
                 userRepository.save(admin);
                 log.warn("Successfully created admin user");
             } else {

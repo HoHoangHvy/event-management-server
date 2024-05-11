@@ -7,7 +7,8 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -27,27 +28,31 @@ public class Event {
 
     @Column(nullable = false)
     LocalDateTime endDate;
-
+    Boolean deleted = false;
     String description;
 
     @Column(nullable = false)
     String status;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "created_by")
-//    Employees createdBy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "createdBy")
+    Employee createdBy;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "approved")
-//    User approvedBy; // Assuming the same User class is used for the approver
-
-//    @OneToOne(mappedBy = "event", fetch = FetchType.LAZY)
-//    Customer idCustomers;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "approvedBy")
+    Employee approvedBy; // Assuming the same User class is used for the approver
 
     @OneToMany(mappedBy = "events")
     Set<EventDetails> eventDetails;
+
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "contract_id", referencedColumnName = "id")
+    @JoinColumn(name = "idContract", referencedColumnName = "id")
     Contract contract;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idCustomer")
+    Customer customer;
+
+    @OneToMany(mappedBy = "events")
+    Set<Task> tasks;
 }

@@ -4,16 +4,21 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EmployeeUpdateRequest {
     String phone;
-    String level;
+    String empLevel;
     String gender;
     String status;
-    LocalDate doB;
+    LocalDate dob;
     LocalDate startDate;
+    String email;
+    String name;
+    String departmentId;
+    String roleId;
 }

@@ -4,6 +4,7 @@ import com.javasproject.eventmanagement.dto.request.AuthenticationRequest;
 import com.javasproject.eventmanagement.dto.request.IntrospectRequest;
 import com.javasproject.eventmanagement.dto.response.AuthenticationResponse;
 import com.javasproject.eventmanagement.dto.response.IntrospectResponse;
+import com.javasproject.eventmanagement.entity.Role;
 import com.javasproject.eventmanagement.entity.User;
 import com.javasproject.eventmanagement.enums.RoleEnum;
 import com.javasproject.eventmanagement.exception.AppException;
@@ -22,9 +23,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Map;
+import java.util.StringJoiner;
 
 @Service
 @RequiredArgsConstructor
@@ -58,7 +62,7 @@ public class AuthenticationService {
                 .subject(user.getUserName())
                 .issuer("javasproject.com")
                 .issueTime(new java.util.Date())
-                .expirationTime(new java.util.Date(System.currentTimeMillis() + 60 * 60 * 1000))
+                .expirationTime(new java.util.Date(System.currentTimeMillis() + 60 * 60 * 1000 * 24))
                 .claim("userName", user.getUserName())
                 .claim("scope", buildScope(user))
                 .build();
@@ -73,8 +77,19 @@ public class AuthenticationService {
             throw new RuntimeException(e);
         }
     }
-    private RoleEnum buildScope(User user) {
-        return user.getRole();
+    private String buildScope(User user) {
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        stringJoiner.add("ROLE_" + user.getRole().getName());
+        if(user.getRole() != null && !CollectionUtils.isEmpty(user.getRole().getPermission())){
+            for (Map.Entry<String, Map<String, Boolean>> entry : user.getRole().getPermission().entrySet()) {
+                String k = entry.getKey();
+                Map<String, Boolean> v = entry.getValue();
+                for(Map.Entry<String, Boolean> entry2 : v.entrySet()){
+                    if(entry2.getValue()) stringJoiner.add(entry2.getKey() +'_'+ k);
+                }
+            }
+        }
+        return stringJoiner.toString();
     }
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();

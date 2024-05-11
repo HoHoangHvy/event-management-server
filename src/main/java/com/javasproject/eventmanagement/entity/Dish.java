@@ -9,7 +9,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "dishes")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -22,6 +23,7 @@ public class Dish {
     long price;
     long cost;
     String unit;
+    Boolean deleted = false;
     @ManyToMany(mappedBy = "dishes", cascade = CascadeType.ALL)
     private Set<EventDetails> eventDetails = new HashSet<>();
 

@@ -3,7 +3,8 @@ package com.javasproject.eventmanagement.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

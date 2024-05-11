@@ -17,6 +17,8 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -34,47 +36,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(request ->
                 request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers("/users").hasAnyRole(RoleEnum.ADMIN.name())
-//                        .requestMatchers(HttpMethod.GET, "/users").hasAnyAuthority(Permission.USER_READ.name())
-//                        .requestMatchers(HttpMethod.POST, "/users").hasAnyAuthority(Permission.USER_WRITE.name())
-//                        .requestMatchers(HttpMethod.PUT, "/users").hasAnyAuthority(Permission.USER_WRITE.name())
-//                        .requestMatchers(HttpMethod.DELETE, "/users").hasAnyAuthority(Permission.USER_DELETE.name())
-
-                        .requestMatchers("/events").hasAnyRole(RoleEnum.ADMIN.name(), RoleEnum.MANAGER.name(), RoleEnum.USER.name())
-//                        .requestMatchers(HttpMethod.GET, "/events").hasAnyAuthority(Permission.EVENT_READ.name())
-//                        .requestMatchers(HttpMethod.POST, "/events").hasAnyAuthority(Permission.EVENT_WRITE.name())
-//                        .requestMatchers(HttpMethod.PUT, "/events").hasAnyAuthority(Permission.EVENT_WRITE.name())
-//                        .requestMatchers(HttpMethod.DELETE, "/events").hasAnyAuthority(Permission.EVENT_DELETE.name())
-
-                        .requestMatchers("/payments").hasAnyRole(RoleEnum.ADMIN.name(), RoleEnum.MANAGER.name(), RoleEnum.USER.name())
-//                        .requestMatchers(HttpMethod.GET, "/payments").hasAnyAuthority(Permission.PAYMENT_READ.name())
-//                        .requestMatchers(HttpMethod.POST, "/payments").hasAnyAuthority(Permission.PAYMENT_WRITE.name())
-//                        .requestMatchers(HttpMethod.PUT, "/payments").hasAnyAuthority(Permission.PAYMENT_WRITE.name())
-//                        .requestMatchers(HttpMethod.DELETE, "/payments").hasAnyAuthority(Permission.PAYMENT_DELETE.name())
-
-                        .requestMatchers("/contracts").hasAnyRole(RoleEnum.ADMIN.name(), RoleEnum.MANAGER.name(), RoleEnum.USER.name())
-//                        .requestMatchers(HttpMethod.GET, "/contracts").hasAnyAuthority(Permission.CONTRACT_READ.name())
-//                        .requestMatchers(HttpMethod.POST, "/contracts").hasAnyAuthority(Permission.CONTRACT_WRITE.name())
-//                        .requestMatchers(HttpMethod.PUT, "/contracts").hasAnyAuthority(Permission.CONTRACT_WRITE.name())
-//                        .requestMatchers(HttpMethod.DELETE, "/contracts").hasAnyAuthority(Permission.CONTRACT_DELETE.name())
-
-                        .requestMatchers("/employees").hasAnyRole(RoleEnum.ADMIN.name(), RoleEnum.MANAGER.name())
-//                        .requestMatchers(HttpMethod.GET, "/employees").hasAnyAuthority(Permission.EMPLOYEE_READ.name())
-//                        .requestMatchers(HttpMethod.POST, "/employees").hasAnyAuthority(Permission.EMPLOYEE_WRITE.name())
-//                        .requestMatchers(HttpMethod.PUT, "/employees").hasAnyAuthority(Permission.EMPLOYEE_WRITE.name())
-//                        .requestMatchers(HttpMethod.DELETE, "/employees").hasAnyAuthority(Permission.EMPLOYEE_DELETE.name())
-
-                        .requestMatchers("/facilities").hasAnyRole(RoleEnum.ADMIN.name(), RoleEnum.MANAGER.name(), RoleEnum.USER.name())
-//                        .requestMatchers(HttpMethod.GET, "/facilities").hasAnyAuthority(Permission.FACILITY_READ.name())
-//                        .requestMatchers(HttpMethod.POST, "/facilities").hasAnyAuthority(Permission.FACILITY_WRITE.name())
-//                        .requestMatchers(HttpMethod.PUT, "/facilities").hasAnyAuthority(Permission.FACILITY_WRITE.name())
-//                        .requestMatchers(HttpMethod.DELETE, "/facilities").hasAnyAuthority(Permission.FACILITY_DELETE.name())
-
-                        .requestMatchers("/dishes").hasAnyRole(RoleEnum.ADMIN.name(), RoleEnum.MANAGER.name(), RoleEnum.USER.name())
-//                        .requestMatchers(HttpMethod.GET, "/dishes").hasAnyAuthority(Permission.DISH_READ.name())
-//                        .requestMatchers(HttpMethod.POST, "/dishes").hasAnyAuthority(Permission.DISH_WRITE.name())
-//                        .requestMatchers(HttpMethod.PUT, "/dishes").hasAnyAuthority(Permission.DISH_WRITE.name())
-//                        .requestMatchers(HttpMethod.DELETE, "/dishes").hasAnyAuthority(Permission.DISH_DELETE.name())
+                        .requestMatchers("/users").hasAnyRole("ADMIN")
                         .anyRequest().authenticated()
         );
 
@@ -89,7 +51,7 @@ public class SecurityConfig {
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
@@ -107,5 +69,19 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedMethods("*")
+                        .allowCredentials(true)
+                        .allowedOriginPatterns("*");
+
+            }
+        };
     }
 }

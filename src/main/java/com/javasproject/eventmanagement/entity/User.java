@@ -9,10 +9,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Optional;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -23,10 +26,19 @@ public class User {
     String id;
     String userName;
     String password;
-    String firstName;
-    String lastName;
-    LocalDate dateOfBirth;
     String status;
-    @Enumerated(EnumType.STRING)
-    RoleEnum role;
+    @Column(nullable = true)
+    Boolean deleted = false;
+
+    @ManyToOne
+    @JoinColumn(name = "idRole")
+    Role role;
+    @OneToOne
+    @JoinColumn(name = "idEmployee")
+    Employee employee;
+    
+
+    public void setRole(Optional<Role> adminRole) {
+        role = adminRole.orElse(null);
+    }
 }

@@ -1,22 +1,27 @@
 package com.javasproject.eventmanagement.dto.response;
 
-import com.javasproject.eventmanagement.entity.Role;
-import com.javasproject.eventmanagement.enums.RoleEnum;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserResponse {
+public class EmployeeResponse {
     String id;
-    String userName;
+    String name;
+    String phone;
+    String empLevel;
+    String gender;
     String status;
-    RoleResponse role;
-    EmployeeResponse employee;
+    String dob;
+    String startDate;
+    String email;
+    String departmentName;
+    String departmentId;
+    String roleId;
 }

@@ -2,6 +2,7 @@ package com.javasproject.eventmanagement.controller;
 
 import com.javasproject.eventmanagement.dto.request.ApiResponse;
 import com.javasproject.eventmanagement.dto.request.UserCreationRequest;
+import com.javasproject.eventmanagement.dto.request.UserUpdateRequest;
 import com.javasproject.eventmanagement.dto.response.UserResponse;
 import com.javasproject.eventmanagement.entity.User;
 import com.javasproject.eventmanagement.enums.Permission;
@@ -50,26 +51,16 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable("id") String id, @RequestBody UserCreationRequest request){
-        return userService.updateUser(id, request);
+    public ApiResponse<UserResponse> updateUser(@PathVariable("id") String id, @RequestBody UserUpdateRequest request){
+        ApiResponse response = new ApiResponse();
+
+        response.setData(userService.updateUser(id, request));
+        return response;
     }
 
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable("id") String id){
         userService.deleteUser(id);
-    }
-
-    @GetMapping("/me")
-    public Map<String, Object> getMe(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-        UserResponse userResponse = userService.getUserByUserName(currentUsername);
-
-        Set<Permission> permissions = userResponse.getRole().getPermissions();
-        return Map.of(
-                "userDetail", userResponse,
-                "permissions", permissions
-        );
     }
 //    @PostMapping("/assign-role")
 //    public ApiResponse<Boolean> assignRole(@RequestBody AssignRoleRequest request){

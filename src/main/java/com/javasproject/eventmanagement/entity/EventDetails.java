@@ -9,7 +9,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "eventdetails")
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -22,8 +23,9 @@ public class EventDetails {
     long price;
     long cost;
     String type;
+    Boolean deleted = false;
     @ManyToOne
-    @JoinColumn(name = "events_id")
+    @JoinColumn(name = "idEvent")
     Event events;
     @ManyToMany(cascade = CascadeType.ALL)
     Set<ThirdParty> thirdparties = new HashSet<>();

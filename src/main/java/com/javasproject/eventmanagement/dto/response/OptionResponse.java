@@ -1,15 +1,15 @@
-package com.javasproject.eventmanagement.dto.request;
+package com.javasproject.eventmanagement.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthenticationRequest {
-    String userName;
-    String password;
+public class OptionResponse {
+    String label;
+    String value;
 }

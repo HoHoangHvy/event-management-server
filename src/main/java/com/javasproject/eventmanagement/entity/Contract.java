@@ -5,10 +5,12 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "contracts")
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -27,8 +29,12 @@ public class Contract {
     int discount;
     String terms;
     long sumPaid;
-//    String createdBy;
+    Boolean deleted = false;
+
+    //    String createdBy;
     @OneToOne(mappedBy = "contract")
     Event event;
+    @OneToMany(mappedBy = "contract")
+    Set<Payment> payment;
 
 }

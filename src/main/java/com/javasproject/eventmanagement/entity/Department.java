@@ -1,30 +1,27 @@
 package com.javasproject.eventmanagement.entity;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "thirdparties")
-@Setter
+@Table(name = "departments")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ThirdParty {
+public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String name;
-    String supplier;
-    String rebate;
-    String type;
+    @Column(nullable = true)
     Boolean deleted = false;
-    @ManyToMany(mappedBy = "thirdparties", cascade = CascadeType.ALL)
-    private Set<EventDetails> eventDetails = new HashSet<>();
-
+    @OneToMany(mappedBy = "department")
+    Set<Employee> employees;
 }

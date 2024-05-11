@@ -3,13 +3,14 @@ package com.javasproject.eventmanagement.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthenticationRequest {
-    String userName;
-    String password;
+public class ChangePasswordRequest {
+    String id;
+    String oldPassword;
+    String newPassword;
 }

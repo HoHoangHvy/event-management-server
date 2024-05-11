@@ -5,7 +5,8 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -15,6 +16,4 @@ public class PaymentCreationRequest {
     String type;
     LocalDate paymentDate;
     int value;
-    String createdBy;
-    String idContract;
 }
