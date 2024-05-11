@@ -28,7 +28,7 @@ public class Event {
 
     @Column(nullable = false)
     LocalDateTime endDate;
-
+    Boolean deleted = false;
     String description;
 
     @Column(nullable = false)

@@ -23,6 +23,7 @@ public class ThirdParty {
     String supplier;
     String rebate;
     String type;
+    Boolean deleted = false;
     @ManyToMany(mappedBy = "thirdparties", cascade = CascadeType.ALL)
     private Set<EventDetails> eventDetails = new HashSet<>();
 

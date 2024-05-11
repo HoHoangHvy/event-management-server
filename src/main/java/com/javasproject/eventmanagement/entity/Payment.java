@@ -23,6 +23,7 @@ public class Payment {
     String status;
     LocalDate paymentDate;
     String paymentMethod;
+    Boolean deleted = false;
     long value;
     @ManyToOne
     @JoinColumn(name = "createdBy")

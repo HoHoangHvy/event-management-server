@@ -24,6 +24,8 @@ public class Customer {
     String email;
     String type;
     LocalDate dob;
+    Boolean deleted = false;
+
     @OneToMany(mappedBy = "customer")
     Set<Event> events;
 }

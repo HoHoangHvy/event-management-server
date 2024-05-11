@@ -62,7 +62,7 @@ public class AuthenticationService {
                 .subject(user.getUserName())
                 .issuer("javasproject.com")
                 .issueTime(new java.util.Date())
-                .expirationTime(new java.util.Date(System.currentTimeMillis() + 60 * 60 * 1000))
+                .expirationTime(new java.util.Date(System.currentTimeMillis() + 60 * 60 * 1000 * 24))
                 .claim("userName", user.getUserName())
                 .claim("scope", buildScope(user))
                 .build();

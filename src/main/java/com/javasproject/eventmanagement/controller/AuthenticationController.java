@@ -65,7 +65,7 @@ public class AuthenticationController {
                 if(entry2.getKey().equals("VIEW") && entry2.getValue()) {
                     Map<String, String> module = new HashMap<>();
                     module.put("moduleName", k);
-                    module.put("route", "/" + k.toLowerCase());
+                    module.put("route", "base/list/" + k.toLowerCase());
                     module.put("icon", getIconByModuleName(k));
                     moduleList.add(module);
                 }

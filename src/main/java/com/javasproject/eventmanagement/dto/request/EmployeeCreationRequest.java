@@ -21,4 +21,5 @@ public class EmployeeCreationRequest {
     LocalDate startDate;
     String email;
     String roleId;
+    String departmentId;
 }

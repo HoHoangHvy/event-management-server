@@ -3,6 +3,7 @@ package com.javasproject.eventmanagement.service;
 import com.javasproject.eventmanagement.dto.request.ChangePasswordRequest;
 import com.javasproject.eventmanagement.dto.request.RoleCreationRequest;
 import com.javasproject.eventmanagement.dto.request.UserCreationRequest;
+import com.javasproject.eventmanagement.dto.request.UserUpdateRequest;
 import com.javasproject.eventmanagement.dto.response.UserResponse;
 import com.javasproject.eventmanagement.entity.Employee;
 import com.javasproject.eventmanagement.entity.Role;
@@ -17,6 +18,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -59,17 +61,31 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found")));
     }
     @PreAuthorize("hasRole('ADMIN')")
-    public User updateUser(String id, UserCreationRequest request){
+    public UserResponse updateUser(String id, UserUpdateRequest request){
         User user = userRepository.findById(id).orElse(null);
         if(user != null){
-            if(userRepository.existsByUserName(request.getUserName())){
-                throw new AppException(ErrorCode.USER_EXISTED);
-            }
-            user = userMapper.toUser(request);
-            return userRepository.save(user);
+            Role role = roleService.findById(request.getRoleId());
+            if(request.getUserName() != null) user.setUserName(request.getUserName());
+            if(request.getStatus() != null) user.setStatus(request.getStatus());
+            if(role != null) user.setRole(Optional.ofNullable(role));
+
+            return userMapper.toUserResponse(userRepository.save(user));
         }
         return null;
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public boolean updateUserRole(String empId, String roleId){
+        User user = userRepository.findByEmployeeId(empId).orElse(null);
+        if(user != null){
+            Role role = roleService.findById(roleId);
+            user.setRole(Optional.ofNullable(role));
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
 
 //    public boolean assignRoleToUser(AssignRoleRequest request){
 //        User user = userRepository.findById(request.getUserId()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXIST));

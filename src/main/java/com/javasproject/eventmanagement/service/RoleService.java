@@ -1,6 +1,7 @@
 package com.javasproject.eventmanagement.service;
 
 import com.javasproject.eventmanagement.dto.request.RoleCreationRequest;
+import com.javasproject.eventmanagement.dto.response.OptionResponse;
 import com.javasproject.eventmanagement.dto.response.RoleResponse;
 import com.javasproject.eventmanagement.entity.Role;
 import com.javasproject.eventmanagement.exception.AppException;
@@ -57,6 +58,14 @@ public class RoleService {
     }
     public List<RoleResponse> findAll() {
         return roleRepository.findAll().stream().map(roleMapper::toRoleResponse).collect(Collectors.toList());
+    }
+
+    public List<OptionResponse> getAllOption() {
+        return roleRepository.findAll()
+                .stream()
+                .filter(role -> !role.getName().equals("ADMIN")) // Filter out roles with name "ADMIN"
+                .map(roleMapper::toOptionResponse)
+                .collect(Collectors.toList());
     }
     public Optional<Role> findByName(String name){
         return roleRepository.findByName(name);

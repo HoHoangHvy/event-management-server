@@ -27,6 +27,9 @@ public class User {
     String userName;
     String password;
     String status;
+    @Column(nullable = true)
+    Boolean deleted = false;
+
     @ManyToOne
     @JoinColumn(name = "idRole")
     Role role;

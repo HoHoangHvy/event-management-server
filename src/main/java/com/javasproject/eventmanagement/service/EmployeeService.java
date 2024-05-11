@@ -4,6 +4,8 @@ import com.javasproject.eventmanagement.dto.request.EmployeeCreationRequest;
 import com.javasproject.eventmanagement.dto.request.EmployeeUpdateRequest;
 import com.javasproject.eventmanagement.dto.request.UserCreationRequest;
 import com.javasproject.eventmanagement.dto.response.EmployeeResponse;
+import com.javasproject.eventmanagement.dto.response.OptionResponse;
+import com.javasproject.eventmanagement.entity.Department;
 import com.javasproject.eventmanagement.entity.Employee;
 import com.javasproject.eventmanagement.mapper.EmployeeMapper;
 import com.javasproject.eventmanagement.repository.EmployeeRepository;
@@ -13,6 +15,8 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -22,6 +26,9 @@ public class EmployeeService {
     UserService userService;
     String defaultPassword = "123123123";
     EmployeeMapper employeeMapper;
+    private final DepartmentService departmentService;
+    private final RoleService roleService;
+
     public Employee createEmployee(EmployeeCreationRequest request) {
         Employee employee = new Employee();
 
@@ -70,20 +77,37 @@ public class EmployeeService {
         if (request.getEmail() != null && !request.getPhone().isEmpty()) {
             employee.setEmail(request.getEmail());
         }
-
+        if (request.getRoleId() != null && !request.getRoleId().isEmpty()) {
+            userService.updateUserRole(employee.getId(), request.getRoleId());
+        }
+        if(request.getDepartmentId() != null && !request.getDepartmentId().isEmpty()){
+            Department department = departmentService.getById(request.getDepartmentId()).orElse(null);
+            employee.setDepartment(department);
+        }
 
         return employeeMapper.toEmployeeResponse(employeeRepository.save(employee));
     }
 
     public void deleteEmployee(String employeeId) {
-        employeeRepository.deleteById(employeeId);
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new RuntimeException("Employee not found"));
+        employee.setDeleted(true);
+        employeeRepository.save(employee);
     }
 
-    public List<Employee> getAllEmployee() {
-        return employeeRepository.findAll();
+    public List<EmployeeResponse> getAllEmployee() {
+        return employeeRepository.findAllActive().stream().map(employeeMapper::toEmployeeResponse).collect(Collectors.toList());
+    }
+    public long countAllEmployee() {
+        return employeeRepository.count();
     }
 
-    public Employee getEmployeeById(String id) {
-        return employeeRepository.findById(id).orElseThrow(() -> new RuntimeException("Employee not found"));
+    public EmployeeResponse getEmployeeById(String id) {
+        return employeeRepository.findById(id).map(employeeMapper::toEmployeeResponse).orElseThrow(() -> new RuntimeException("Employee not found"));
+    }
+    public Map<String, Object> getRelated(String employeeId) {
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new RuntimeException("Employee not found"));
+        List<OptionResponse> departmentList = departmentService.getAllOption();
+        List<OptionResponse> roleList = roleService.getAllOption();
+        return Map.of("departmentId", departmentList, "roleId", roleList);
     }
 }

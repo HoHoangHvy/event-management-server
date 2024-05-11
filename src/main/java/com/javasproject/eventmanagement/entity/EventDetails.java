@@ -23,6 +23,7 @@ public class EventDetails {
     long price;
     long cost;
     String type;
+    Boolean deleted = false;
     @ManyToOne
     @JoinColumn(name = "idEvent")
     Event events;

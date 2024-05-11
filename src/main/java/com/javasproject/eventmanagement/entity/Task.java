@@ -27,6 +27,7 @@ public class Task {
     String priority;
     String description;
     String progress;
+    Boolean deleted = false;
 
     @ManyToOne
     @JoinColumn(name = "idEvent")

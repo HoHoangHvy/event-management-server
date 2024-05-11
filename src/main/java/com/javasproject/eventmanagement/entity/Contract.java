@@ -29,7 +29,9 @@ public class Contract {
     int discount;
     String terms;
     long sumPaid;
-//    String createdBy;
+    Boolean deleted = false;
+
+    //    String createdBy;
     @OneToOne(mappedBy = "contract")
     Event event;
     @OneToMany(mappedBy = "contract")

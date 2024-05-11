@@ -20,6 +20,8 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String name;
+    @Column(nullable = true)
+    Boolean deleted = false;
     @OneToMany(mappedBy = "department")
     Set<Employee> employees;
 }

@@ -27,6 +27,8 @@ public class Employee {
     LocalDate dob;
     LocalDate startDate;
     String email;
+    @Column(nullable = true)
+    Boolean deleted = false;
 
     @OneToOne(mappedBy = "employee")
     User user;

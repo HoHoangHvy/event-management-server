@@ -18,7 +18,10 @@ public class EmployeeResponse {
     String empLevel;
     String gender;
     String status;
-    LocalDate dob;
-    LocalDate startDate;
+    String dob;
+    String startDate;
     String email;
+    String departmentName;
+    String departmentId;
+    String roleId;
 }

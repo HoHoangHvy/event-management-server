@@ -25,6 +25,8 @@ public class Role  {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String name;
+    @Column(nullable = true)
+    Boolean deleted = false;
     @Lob
     @Column
     String permission;

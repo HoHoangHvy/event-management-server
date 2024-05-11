@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -18,4 +20,6 @@ public class ApiResponse<T> {
     boolean success = true;
     String message;
     T data;
+    List angularState ;
+
 }

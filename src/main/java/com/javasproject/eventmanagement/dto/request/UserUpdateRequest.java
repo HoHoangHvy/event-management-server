@@ -1,24 +1,20 @@
 package com.javasproject.eventmanagement.dto.request;
 
+import com.javasproject.eventmanagement.entity.Employee;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class EmployeeUpdateRequest {
-    String phone;
-    String empLevel;
-    String gender;
+
+public class UserUpdateRequest {
+    @Size(min = 4, message = "USERNAME_INVALID_EXCEPTION")
+    String userName;
     String status;
-    LocalDate dob;
-    LocalDate startDate;
-    String email;
-    String name;
-    String departmentId;
     String roleId;
 }
