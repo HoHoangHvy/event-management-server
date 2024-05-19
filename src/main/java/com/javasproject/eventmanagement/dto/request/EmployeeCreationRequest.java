@@ -17,7 +17,7 @@ public class EmployeeCreationRequest {
     String empLevel;
     String gender;
     String status;
-    LocalDate doB;
+    LocalDate dob;
     LocalDate startDate;
     String email;
     String roleId;

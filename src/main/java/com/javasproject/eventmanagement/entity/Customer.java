@@ -24,8 +24,10 @@ public class Customer {
     String email;
     String type;
     LocalDate dob;
+    LocalDate date_entered = LocalDate.now();
     Boolean deleted = false;
 
     @OneToMany(mappedBy = "customer")
     Set<Event> events;
+
 }

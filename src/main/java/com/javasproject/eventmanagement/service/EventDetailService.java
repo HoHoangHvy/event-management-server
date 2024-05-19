@@ -49,6 +49,7 @@ public class EventDetailService {
             return false;
         }
     }
+
     public EventDetails createEventDetailWithRelations(EventDetailCreationRequest requestEventDetail, Event event){
 
         EventDetails eventDetails = new EventDetails();
@@ -58,35 +59,35 @@ public class EventDetailService {
         eventDetails.setCost(requestEventDetail.getCost());
         eventDetails.setEvents(event);
 
-        Set<Facility> facilities = requestEventDetail.getFacilities().stream()
-                .map(id -> {
-                    Facility facility = facilityService.getById(String.valueOf(id));
-                    if (facility == null) {
-                        throw new EntityNotFoundException("Facility with id " + id + " not found");
-                    }
-                    return facility;
-                }).collect(Collectors.toSet());
-        eventDetails.setFacilities(facilities);
-
-        Set<Dish> dishes = requestEventDetail.getDishes().stream()
-                .map(id -> {
-                    Dish dish = dishService.getById(String.valueOf(id));
-                    if (dish == null) {
-                        throw new EntityNotFoundException("Dish with id " + id + " not found");
-                    }
-                    return dish;
-                }).collect(Collectors.toSet());
-        eventDetails.setDishes(dishes);
-
-        Set<ThirdParty> thirdParties = requestEventDetail.getThirdparties().stream()
-                .map(id -> {
-                    ThirdParty thirdparty = thirdPartyService.getById(String.valueOf(id));
-                    if (thirdparty == null) {
-                        throw new EntityNotFoundException("ThirdParty with id " + id + " not found");
-                    }
-                    return thirdparty;
-                }).collect(Collectors.toSet());
-        eventDetails.setThirdparties(thirdParties);
+//        Set<Facility> facilities = requestEventDetail.getFacilities().stream()
+//                .map(id -> {
+//                    Facility facility = facilityService.getById(String.valueOf(id));
+//                    if (facility == null) {
+//                        throw new EntityNotFoundException("Facility with id " + id + " not found");
+//                    }
+//                    return facility;
+//                }).collect(Collectors.toSet());
+//        eventDetails.setFacilities(facilities);
+//
+//        Set<Dish> dishes = requestEventDetail.getDishes().stream()
+//                .map(id -> {
+//                    Dish dish = dishService.getById(String.valueOf(id));
+//                    if (dish == null) {
+//                        throw new EntityNotFoundException("Dish with id " + id + " not found");
+//                    }
+//                    return dish;
+//                }).collect(Collectors.toSet());
+//        eventDetails.setDishes(dishes);
+//
+//        Set<ThirdParty> thirdParties = requestEventDetail.getThirdparties().stream()
+//                .map(id -> {
+//                    ThirdParty thirdparty = thirdPartyService.getById(String.valueOf(id));
+//                    if (thirdparty == null) {
+//                        throw new EntityNotFoundException("ThirdParty with id " + id + " not found");
+//                    }
+//                    return thirdparty;
+//                }).collect(Collectors.toSet());
+//        eventDetails.setThirdparties(thirdParties);
 
         return eventDetailRepository.save(eventDetails);
     }

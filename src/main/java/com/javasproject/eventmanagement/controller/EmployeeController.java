@@ -29,8 +29,8 @@ public class EmployeeController {
 
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/employees")
-    public ApiResponse<Employee> createEmployee(@RequestBody EmployeeCreationRequest request){
-        ApiResponse<Employee> apiResponse = new ApiResponse<>();
+    public ApiResponse<EmployeeResponse> createEmployee(@RequestBody EmployeeCreationRequest request){
+        ApiResponse<EmployeeResponse> apiResponse = new ApiResponse<>();
 
         apiResponse.setData(employeeService.createEmployee(request));
         apiResponse.setMessage("Successfully build the employee.");
@@ -51,7 +51,7 @@ public class EmployeeController {
         apiResponse.setMessage("Successfully get the employee's list");
         return apiResponse;
     }
-//    @CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/employees/{employeeId}")
     public ResponseEntity<ApiResponse<EmployeeResponse>> getEmployeeById(@PathVariable("employeeId") String employeeId) {
         ApiResponse<EmployeeResponse> apiResponse = new ApiResponse<>();
@@ -80,10 +80,10 @@ public class EmployeeController {
         return apiResponse;
     }
     @CrossOrigin(origins = "http://localhost:4200")
-    @GetMapping("/related/employees/{employeeId}")
-    public ApiResponse<Map<String, Object>> getRelated(@PathVariable("employeeId") String employeeId){
+    @GetMapping("/related/employees")
+    public ApiResponse<Map<String, Object>> getRelated(){
         ApiResponse<Map<String, Object>> apiResponse = new ApiResponse<>();
-        Map<String, Object> listResponse = employeeService.getRelated(employeeId);
+        Map<String, Object> listResponse = employeeService.getRelated();
         apiResponse.setData(listResponse);
         apiResponse.setMessage("Successfully get the employee's list");
         return apiResponse;

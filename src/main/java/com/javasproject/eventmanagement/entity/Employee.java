@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "employees")
@@ -29,6 +30,8 @@ public class Employee {
     String email;
     @Column(nullable = true)
     Boolean deleted = false;
+    LocalDate date_entered = LocalDate.now();
+
 
     @OneToOne(mappedBy = "employee")
     User user;
@@ -40,4 +43,19 @@ public class Employee {
     @OneToOne(mappedBy = "employee")
     Task task;
 
+
+    @OneToMany(mappedBy = "employee")
+    List<New> news;
+
+    @OneToMany(mappedBy = "employee")
+    List<Notification> notifications;
+
+    @OneToMany(mappedBy = "createdBy")
+    List<Request> createdRequests;
+
+    @OneToMany(mappedBy = "approvedBy")
+    List<Request> approvedRequests;
+
+    @OneToMany(mappedBy = "employee")
+    List<ResourceBookingDetail> resourceBookingDetails;
 }

@@ -3,10 +3,13 @@ package com.javasproject.eventmanagement.service;
 import com.javasproject.eventmanagement.dto.request.EmployeeCreationRequest;
 import com.javasproject.eventmanagement.dto.request.EmployeeUpdateRequest;
 import com.javasproject.eventmanagement.dto.request.UserCreationRequest;
+import com.javasproject.eventmanagement.dto.response.DepartmentResponse;
 import com.javasproject.eventmanagement.dto.response.EmployeeResponse;
 import com.javasproject.eventmanagement.dto.response.OptionResponse;
 import com.javasproject.eventmanagement.entity.Department;
 import com.javasproject.eventmanagement.entity.Employee;
+import com.javasproject.eventmanagement.exception.AppException;
+import com.javasproject.eventmanagement.exception.ErrorCode;
 import com.javasproject.eventmanagement.mapper.EmployeeMapper;
 import com.javasproject.eventmanagement.repository.EmployeeRepository;
 import lombok.AccessLevel;
@@ -29,7 +32,13 @@ public class EmployeeService {
     private final DepartmentService departmentService;
     private final RoleService roleService;
 
-    public Employee createEmployee(EmployeeCreationRequest request) {
+    public EmployeeResponse createEmployee(EmployeeCreationRequest request) {
+        if(employeeRepository.existsByEmail(request.getEmail())){
+            throw new AppException(ErrorCode.EMAIL_EXISTED);
+        }
+        if(employeeRepository.existsByPhone(request.getPhone())){
+            throw new AppException(ErrorCode.PHONE_EXISTED);
+        }
         Employee employee = new Employee();
 
         employee.setName(request.getName());
@@ -38,8 +47,11 @@ public class EmployeeService {
         employee.setGender(request.getGender());
         employee.setStatus(request.getStatus());
         employee.setStartDate(request.getStartDate());
-        employee.setDob(request.getDoB());
+        employee.setDob(request.getDob().plusDays(1));
         employee.setEmail(request.getEmail());
+
+        Department department = departmentService.getById(request.getDepartmentId()).orElse(null);
+        employee.setDepartment(department);
 
         Employee savedEmployee = employeeRepository.save(employee);
         UserCreationRequest userCreationRequest = new UserCreationRequest();
@@ -50,7 +62,7 @@ public class EmployeeService {
         userCreationRequest.setEmployee(savedEmployee);
 
         userService.createUser(userCreationRequest);
-        return savedEmployee;
+        return employeeMapper.toEmployeeResponse(savedEmployee);
     }
 
     public EmployeeResponse updateEmployee(String EmployeeId, EmployeeUpdateRequest request) {
@@ -98,14 +110,13 @@ public class EmployeeService {
         return employeeRepository.findAllActive().stream().map(employeeMapper::toEmployeeResponse).collect(Collectors.toList());
     }
     public long countAllEmployee() {
-        return employeeRepository.count();
+        return employeeRepository.count() - 1;
     }
 
     public EmployeeResponse getEmployeeById(String id) {
         return employeeRepository.findById(id).map(employeeMapper::toEmployeeResponse).orElseThrow(() -> new RuntimeException("Employee not found"));
     }
-    public Map<String, Object> getRelated(String employeeId) {
-        Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new RuntimeException("Employee not found"));
+    public Map<String, Object> getRelated() {
         List<OptionResponse> departmentList = departmentService.getAllOption();
         List<OptionResponse> roleList = roleService.getAllOption();
         return Map.of("departmentId", departmentList, "roleId", roleList);

@@ -1,16 +1,11 @@
 package com.javasproject.eventmanagement.entity;
 
-import com.javasproject.eventmanagement.enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -27,6 +22,8 @@ public class User {
     String userName;
     String password;
     String status;
+    LocalDate date_entered = LocalDate.now();
+
     @Column(nullable = true)
     Boolean deleted = false;
 

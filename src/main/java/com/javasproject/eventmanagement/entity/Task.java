@@ -28,6 +28,7 @@ public class Task {
     String description;
     String progress;
     Boolean deleted = false;
+    LocalDate date_entered = LocalDate.now();
 
     @ManyToOne
     @JoinColumn(name = "idEvent")

@@ -2,6 +2,7 @@ package com.javasproject.eventmanagement.service;
 
 import com.javasproject.eventmanagement.dto.request.RoleCreationRequest;
 import com.javasproject.eventmanagement.dto.response.OptionResponse;
+import com.javasproject.eventmanagement.dto.response.RoleListResponse;
 import com.javasproject.eventmanagement.dto.response.RoleResponse;
 import com.javasproject.eventmanagement.entity.Role;
 import com.javasproject.eventmanagement.exception.AppException;
@@ -14,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -34,14 +36,17 @@ public class RoleService {
         return roleRepository.save(role);
     }
 
-    public Role findById(String id) {
+    public RoleResponse findById(String id) {
+        return roleMapper.toRoleResponse(roleRepository.findById(id).orElse(null));
+    }
+    public Role findObjectById(String id) {
         return roleRepository.findById(id).orElse(null);
     }
 
     public RoleResponse update(String id, RoleCreationRequest entity) {
         Role role = roleRepository.findById(id).orElse(null);
         if(role != null){
-            if(roleRepository.existsByName(entity.getName())){
+            if(roleRepository.existsByName(entity.getName()) && roleRepository.findByName(entity.getName()).get().getId() != role.getId()){
                 throw new AppException(ErrorCode.ROLE_EXISTED);
             }
             role.setName(entity.getName());
@@ -56,8 +61,8 @@ public class RoleService {
             roleRepository.deleteById(id);
         }
     }
-    public List<RoleResponse> findAll() {
-        return roleRepository.findAll().stream().map(roleMapper::toRoleResponse).collect(Collectors.toList());
+    public List<RoleListResponse> findAll() {
+        return roleRepository.findAll().stream().map(roleMapper::toRoleListResponse).collect(Collectors.toList());
     }
 
     public List<OptionResponse> getAllOption() {
@@ -69,5 +74,14 @@ public class RoleService {
     }
     public Optional<Role> findByName(String name){
         return roleRepository.findByName(name);
+    }
+
+    public Map<String, Object> getRelated() {
+        List<OptionResponse> roleList = this.getAllOption();
+        return Map.of("roleId", roleList);
+    }
+
+    public long countAll() {
+        return roleRepository.count();
     }
 }

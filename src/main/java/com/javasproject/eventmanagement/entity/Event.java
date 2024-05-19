@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -30,6 +31,7 @@ public class Event {
     LocalDateTime endDate;
     Boolean deleted = false;
     String description;
+    LocalDate date_entered = LocalDate.now();
 
     @Column(nullable = false)
     String status;
@@ -55,4 +57,5 @@ public class Event {
 
     @OneToMany(mappedBy = "events")
     Set<Task> tasks;
+
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +24,9 @@ public class Facility {
     long total;
     String type;
     long price;
+    LocalDate date_entered = LocalDate.now();
+
     Boolean deleted = false;
-    @ManyToMany(mappedBy = "facilities", cascade = CascadeType.ALL)
-    private Set<EventDetails> eventDetails = new HashSet<>();
+    @OneToMany(mappedBy = "facility", cascade = CascadeType.ALL)
+    private Set<EventDetailFacility> eventDetailFacilities = new HashSet<>();
 }

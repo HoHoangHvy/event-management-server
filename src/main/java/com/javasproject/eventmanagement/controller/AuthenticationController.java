@@ -48,6 +48,7 @@ public class AuthenticationController {
                 .build();
     }
     UserService userService;
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/me")
     public ApiResponse<Map<String, Object>> getMe(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -62,10 +63,12 @@ public class AuthenticationController {
             String k = entry.getKey();
             Map<String, Boolean> v = entry.getValue();
             for(Map.Entry<String, Boolean> entry2 : v.entrySet()){
-                if(entry2.getKey().equals("VIEW") && entry2.getValue()) {
+                if(entry2.getKey().equals("VIEW") && entry2.getValue() && !k.equals("Roles") && !k.equals("Users") && !k.equals("EventDetails")) {
                     Map<String, String> module = new HashMap<>();
                     module.put("moduleName", k);
-                    module.put("route", "base/list/" + k.toLowerCase());
+                    if(k == "News") {
+                        module.put("route", "base/new-feed");
+                    } else module.put("route", "base/list/" + k.toLowerCase());
                     module.put("icon", getIconByModuleName(k));
                     moduleList.add(module);
                 }

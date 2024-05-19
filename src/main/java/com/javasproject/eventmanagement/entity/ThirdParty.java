@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,7 +25,9 @@ public class ThirdParty {
     String rebate;
     String type;
     Boolean deleted = false;
-    @ManyToMany(mappedBy = "thirdparties", cascade = CascadeType.ALL)
-    private Set<EventDetails> eventDetails = new HashSet<>();
+    LocalDate date_entered = LocalDate.now();
+
+    @OneToMany(mappedBy = "thirdParty", cascade = CascadeType.ALL)
+    private Set<EventDetailThirdParty> eventDetailThirdParties = new HashSet<>();
 
 }

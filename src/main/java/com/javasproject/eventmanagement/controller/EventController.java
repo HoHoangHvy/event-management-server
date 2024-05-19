@@ -2,6 +2,9 @@ package com.javasproject.eventmanagement.controller;
 
 import com.javasproject.eventmanagement.dto.request.ApiResponse;
 import com.javasproject.eventmanagement.dto.request.EventCreationRequest;
+import com.javasproject.eventmanagement.dto.response.EmployeeResponse;
+import com.javasproject.eventmanagement.dto.response.EventResponse;
+import com.javasproject.eventmanagement.dto.response.ListResponse;
 import com.javasproject.eventmanagement.entity.Event;
 import com.javasproject.eventmanagement.service.EventService;
 import lombok.AccessLevel;
@@ -10,31 +13,51 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequestMapping("/events")
+@RequestMapping("/api")
 public class EventController {
     EventService eventService;
 
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/events")
+    public ApiResponse<ListResponse> getAllEvents() {
+        ApiResponse<ListResponse> apiResponse = new ApiResponse<>();
+        var listResponse = new ListResponse<EventResponse>();
+        List<EventResponse> events = eventService.getEventList();
+        long totalData = eventService.countAllEvent();
+        listResponse.setListData(events);
+        listResponse.setTotalData(totalData);
 
-    @GetMapping
-    public ApiResponse<List<Event>> getAllEvents() {
-        return ApiResponse.<List<Event>>builder()
-                .data(eventService.getEventList())
-                .build();
+        apiResponse.setData(listResponse);
+        apiResponse.setMessage("Successfully get the event's list");
+        return apiResponse;
     }
-    @PostMapping
-    public ApiResponse<Event> createEvent(@RequestBody EventCreationRequest requestEvent) {
-        return ApiResponse.<Event>builder()
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PostMapping("/events")
+    public ApiResponse<EventResponse> createEvent(@RequestBody EventCreationRequest requestEvent) {
+        return ApiResponse.<EventResponse>builder()
                 .data(eventService.createEventWithEventDetails(requestEvent))
                 .build();
     }
-    @GetMapping("/{id}")
-    public ApiResponse<Event> getEventById(@PathVariable String id) {
-        return ApiResponse.<Event>builder()
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/events/{id}")
+    public ApiResponse<EventResponse> getEventById(@PathVariable String id) {
+        return ApiResponse.<EventResponse>builder()
                 .data(eventService.getById(id))
                 .build();
+    }
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/related/events/{eventId}")
+    public ApiResponse<Map<String, Object>> getRelated(@PathVariable("eventId") String eventId){
+        ApiResponse<Map<String, Object>> apiResponse = new ApiResponse<>();
+        Map<String, Object> listResponse = eventService.getRelated(eventId);
+        apiResponse.setData(listResponse);
+        apiResponse.setMessage("Successfully get the employee's list");
+        return apiResponse;
     }
 }

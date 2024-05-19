@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
@@ -20,6 +21,8 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String name;
+    LocalDate date_entered = LocalDate.now();
+
     @Column(nullable = true)
     Boolean deleted = false;
     @OneToMany(mappedBy = "department")

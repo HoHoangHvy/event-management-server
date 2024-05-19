@@ -1,10 +1,13 @@
 package com.javasproject.eventmanagement.service;
 
 import com.javasproject.eventmanagement.dto.request.DepartmentRequest;
+import com.javasproject.eventmanagement.dto.response.DepartmentListResponse;
 import com.javasproject.eventmanagement.dto.response.DepartmentResponse;
+import com.javasproject.eventmanagement.dto.response.EmployeeResponse;
 import com.javasproject.eventmanagement.dto.response.OptionResponse;
 import com.javasproject.eventmanagement.entity.Department;
 import com.javasproject.eventmanagement.mapper.DepartmentMapper;
+import com.javasproject.eventmanagement.mapper.EmployeeMapper;
 import com.javasproject.eventmanagement.repository.DepartmentRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +33,8 @@ public class DepartmentService {
         return departmentMapper.toDepartmentResponse(departmentRepository.save(department));
     }
 
-    public List<DepartmentResponse> getAll() {
-        return departmentRepository.findAll().stream().map(departmentMapper::toDepartmentResponse).collect(Collectors.toList());
+    public List<DepartmentListResponse> getAll() {
+        return departmentRepository.findAll().stream().map(departmentMapper::toDepartmentListResponse).collect(Collectors.toList());
     }
 
     public List<OptionResponse> getAllOption() {
@@ -50,5 +53,18 @@ public class DepartmentService {
         else {
             return false;
         }
+    }
+    public long countAll(){
+        return departmentRepository.count();
+    }
+
+    public DepartmentResponse updateDepartment(String id, DepartmentRequest request) {
+        Department department = departmentRepository.findById(id).orElseThrow();
+        department.setName(request.getName());
+        return departmentMapper.toDepartmentResponse(departmentRepository.save(department));
+    }
+    EmployeeMapper employeeMapper;
+    public List<EmployeeResponse> getRelatedEmployees(String id) {
+        return departmentRepository.findById(id).orElseGet(Department::new).getEmployees().stream().map(employeeMapper::toEmployeeResponse).collect(Collectors.toList());
     }
 }

@@ -10,6 +10,12 @@ public enum ErrorCode {
     ROLE_NOT_EXIST(114, "Role not exist"),
     INVALID_CREDENTIALS(105, "Wrong credentials"),
     ROLE_EXISTED(106, "Role is existed"),
+    PHONE_EXISTED(107, "Phone is existed"),
+    EMAIL_EXISTED(108, "Email is existed"),
+    NEWS_NOT_FOUND(109, "News is not existed"),
+    RESOURCE_NOT_FOUND(1010, "News is not existed"),
+    NOTIFICATION_NOT_FOUND(1011, "News is not existed"),
+    REQUEST_NOT_FOUND(1012, "News is not existed"),
     ;
     private int code;
     private String message;

@@ -24,6 +24,7 @@ public class Payment {
     LocalDate paymentDate;
     String paymentMethod;
     Boolean deleted = false;
+    LocalDate date_entered = LocalDate.now();
     long value;
     @ManyToOne
     @JoinColumn(name = "createdBy")

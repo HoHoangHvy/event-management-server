@@ -17,5 +17,6 @@ public class EventCreationRequest {
     LocalDateTime startDate;
     LocalDateTime endDate;
     String description;
+    String customerId;
     Set<EventDetailCreationRequest> eventDetails;
 }

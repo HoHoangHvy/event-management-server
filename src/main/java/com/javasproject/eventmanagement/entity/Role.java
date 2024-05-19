@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
@@ -32,6 +33,8 @@ public class Role  {
     String permission;
     @OneToMany(mappedBy = "role")
     Set<User> users;
+    LocalDate date_entered = LocalDate.now();
+
 
     public Map<String, Map<String, Boolean>> getPermission() {
         if(this.permission != null){

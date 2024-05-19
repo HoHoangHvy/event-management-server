@@ -17,6 +17,10 @@ public enum ModuleIcon {
     Facilities("cilLineWeight"),
     Tasks("cilTask"),
     ThirdParties("cilHandshake"),
+    Notifications("cilBell"),
+    Requests("cilCopy"),
+    Resources("cilFactory"),
+    News("cilFax"),
     ;
     private final String icon;
 }

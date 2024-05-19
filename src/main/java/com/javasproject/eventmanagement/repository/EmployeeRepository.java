@@ -14,7 +14,7 @@ import java.util.List;
 public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
     // Fetch active employees (logical deletion handled via the "deleted" field)
-    @Query("SELECT e FROM Employee e WHERE e.deleted != true OR e.deleted IS NULL")
+    @Query("SELECT e FROM Employee e WHERE (e.deleted != true OR e.deleted IS NULL) AND e.name <> 'Admin' ORDER BY e.date_entered ASC")
     List<Employee> findAllActive();
 
     // Soft delete an employee by setting the "deleted" field to 1
@@ -22,4 +22,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
     @Transactional
     @Query("UPDATE Employee e SET e.deleted = true WHERE e.id = :id")
     void softDeleteById(@Param("id") String id);
+
+    Boolean existsByEmail(String email);
+    Boolean existsByPhone(String phone);
 }

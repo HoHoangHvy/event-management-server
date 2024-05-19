@@ -3,6 +3,8 @@ package com.javasproject.eventmanagement.controller;
 import com.javasproject.eventmanagement.dto.request.ApiResponse;
 import com.javasproject.eventmanagement.dto.request.UserCreationRequest;
 import com.javasproject.eventmanagement.dto.request.UserUpdateRequest;
+import com.javasproject.eventmanagement.dto.response.ListResponse;
+import com.javasproject.eventmanagement.dto.response.UserListResponse;
 import com.javasproject.eventmanagement.dto.response.UserResponse;
 import com.javasproject.eventmanagement.entity.User;
 import com.javasproject.eventmanagement.enums.Permission;
@@ -24,48 +26,54 @@ import java.util.Set;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-@RequestMapping("/users")
+@RequestMapping("api/")
 public class UserController {
     UserService userService;
-
-    @PostMapping
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PostMapping("/users")
     public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request){
         ApiResponse<UserResponse> response = new ApiResponse<>();
         response.setData(userService.createUser(request));
         return response;
     }
-
-    @GetMapping
-    public ApiResponse<List<UserResponse>> getAllUsers(){
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("User: {}", authentication.getPrincipal());
-        authentication.getAuthorities().forEach(a -> log.info("Role: {}", a.getAuthority()));
-        return ApiResponse.<List<UserResponse>>builder()
-                .data(userService.getAllUsers())
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/users")
+    public ApiResponse<ListResponse> getAllUsers(){
+        ListResponse listResponse = new ListResponse<UserListResponse>();
+        listResponse.setListData(userService.getAllUsers());
+        listResponse.setTotalData(userService.countAllUsers());
+        return ApiResponse.<ListResponse>builder()
+                .data(listResponse)
                 .build();
     }
-
-    @GetMapping("/{id}")
-    public UserResponse getUserById(@PathVariable("id") String id){
-        return userService.getUserById(id);
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/users/{id}")
+    public ApiResponse<UserListResponse> getUserById(@PathVariable("id") String id){
+        return ApiResponse.<UserListResponse>builder()
+                .data(userService.getUserById(id))
+                .build();
     }
-
-    @PutMapping("/{id}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PutMapping("/users/{id}")
     public ApiResponse<UserResponse> updateUser(@PathVariable("id") String id, @RequestBody UserUpdateRequest request){
         ApiResponse response = new ApiResponse();
 
         response.setData(userService.updateUser(id, request));
         return response;
     }
-
-    @DeleteMapping("/{id}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable("id") String id){
         userService.deleteUser(id);
     }
-//    @PostMapping("/assign-role")
-//    public ApiResponse<Boolean> assignRole(@RequestBody AssignRoleRequest request){
-//        ApiResponse<Boolean> response = new ApiResponse<>();
-//        response.setData(userService.assignRoleToUser(request));
-//        return response;
-//    }
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/related/users")
+    public ApiResponse<Map<String, Object>> getRelated(){
+        ApiResponse<Map<String, Object>> apiResponse = new ApiResponse<>();
+        Map<String, Object> listResponse = userService.getRelated();
+        apiResponse.setData(listResponse);
+        apiResponse.setMessage("Successfully get the employee's list");
+        return apiResponse;
+    }
 }
