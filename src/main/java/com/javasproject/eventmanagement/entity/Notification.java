@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "notifications")
@@ -19,12 +20,14 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(nullable = false)
     String id;
-
     String name;
     String type;
     String content;
-    LocalDate date_entered = LocalDate.now();
+    LocalDateTime date_entered = LocalDateTime.now();
     Boolean deleted = false;
+    Boolean isRead = false;
+    String parentId;
+    String parentType;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")

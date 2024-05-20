@@ -116,6 +116,9 @@ public class EmployeeService {
     public EmployeeResponse getEmployeeById(String id) {
         return employeeRepository.findById(id).map(employeeMapper::toEmployeeResponse).orElseThrow(() -> new RuntimeException("Employee not found"));
     }
+    public Employee getEmployeeObjectById(String id) {
+        return employeeRepository.findById(id).orElseThrow(() -> new RuntimeException("Employee not found"));
+    }
     public Map<String, Object> getRelated() {
         List<OptionResponse> departmentList = departmentService.getAllOption();
         List<OptionResponse> roleList = roleService.getAllOption();

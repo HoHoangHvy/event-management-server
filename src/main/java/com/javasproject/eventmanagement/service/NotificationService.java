@@ -22,16 +22,19 @@ import java.util.stream.Collectors;
 public class NotificationService {
     NotificationRepository notificationRepository;
     NotificationMapper notificationMapper;
+    EmployeeService employeeService;
+    private final UserService userService;
 
     public NotificationResponse createNotification(NotificationCreationRequest request) {
         Notification notification = new Notification();
         notification.setName(request.getName());
         notification.setType(request.getType());
         notification.setContent(request.getContent());
-        notification.setDeleted(false);
+        notification.setParentId(request.getParentId());
+        notification.setParentType(request.getParentType());
+        notification.setEmployee(employeeService.getEmployeeObjectById(request.getEmployeeId()));
 
-        Notification savedNotification = notificationRepository.save(notification);
-        return notificationMapper.toNotificationResponse(savedNotification);
+        return notificationMapper.toNotificationResponse(notificationRepository.save(notification));
     }
 
     public NotificationResponse updateNotification(String notificationId, NotificationCreationRequest request) {
@@ -46,9 +49,6 @@ public class NotificationService {
         if (request.getContent() != null && !request.getContent().isEmpty()) {
             notification.setContent(request.getContent());
         }
-        if (request.getDeleted() != null) {
-            notification.setDeleted(request.getDeleted());
-        }
 
         return notificationMapper.toNotificationResponse(notificationRepository.save(notification));
     }
@@ -60,7 +60,7 @@ public class NotificationService {
     }
 
     public List<NotificationResponse> getAllNotifications() {
-        return notificationRepository.findAll().stream().map(notificationMapper::toNotificationResponse).collect(Collectors.toList());
+        return notificationRepository.findAllActiveByUserId(userService.getCurrentUser().getEmployee()).stream().map(notificationMapper::toNotificationResponse).collect(Collectors.toList());
     }
 
     public NotificationResponse getNotificationById(String id) {

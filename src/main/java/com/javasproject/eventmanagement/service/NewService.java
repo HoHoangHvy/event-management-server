@@ -1,6 +1,7 @@
 package com.javasproject.eventmanagement.service;
 
 import com.javasproject.eventmanagement.dto.request.NewCreationRequest;
+import com.javasproject.eventmanagement.dto.request.NotificationCreationRequest;
 import com.javasproject.eventmanagement.dto.response.NewResponse;
 import com.javasproject.eventmanagement.entity.New;
 import com.javasproject.eventmanagement.exception.AppException;
@@ -21,7 +22,8 @@ import java.util.stream.Collectors;
 public class NewService {
     NewRepository newsRepository;
     NewMapper newsMapper;
-
+    NotificationService notiService;
+    EmployeeService employeeService;
     public NewResponse createNew(NewCreationRequest request) {
         New news = new New();
         news.setName(request.getName());
@@ -29,9 +31,21 @@ public class NewService {
         news.setContent(request.getContent());
         news.setDeleted(false);
         news.setEmployee(userService.getCurrentUser().getEmployee());
+        New savedNews = newsRepository.save(news);
+        employeeService.getAllEmployee().forEach(employee -> {
+            if(employee.getStatus().equals("Working")) {
+                NotificationCreationRequest notiRequest = new NotificationCreationRequest();
+                notiRequest.setName("You have new news: " + savedNews.getName());
+                notiRequest.setContent(savedNews.getContent());
+                notiRequest.setParentId(savedNews.getId());
+                notiRequest.setType("Info");
+                notiRequest.setParentType("News");
+                notiRequest.setEmployeeId(employee.getId());
+                notiService.createNotification(notiRequest);
+            }
+        });
 
-        New savedNew = newsRepository.save(news);
-        return newsMapper.toNewResponse(savedNew);
+        return newsMapper.toNewResponse(savedNews);
     }
     UserService userService;
     public NewResponse updateNew(String newsId, NewCreationRequest request) {

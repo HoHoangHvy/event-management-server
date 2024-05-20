@@ -17,5 +17,7 @@ public class NotificationResponse {
     String type;
     String content;
     String dateEntered;
-    Boolean deleted;
+    String parentId;
+    String parentType;
+    Boolean isRead;
 }

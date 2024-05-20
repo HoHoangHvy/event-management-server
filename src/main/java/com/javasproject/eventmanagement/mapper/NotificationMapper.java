@@ -9,6 +9,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface NotificationMapper {
     Notification toNotification(NotificationCreationRequest request);
-    @Mapping(target = "dateEntered", source = "date_entered", dateFormat = "yyyy-MM-dd")
+    @Mapping(target = "dateEntered", source = "date_entered", dateFormat = "yyyy-MM-dd HH:mm:ss")
     NotificationResponse toNotificationResponse(Notification notification);
+
 }

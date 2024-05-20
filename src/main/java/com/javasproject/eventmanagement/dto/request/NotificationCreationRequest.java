@@ -15,6 +15,7 @@ public class NotificationCreationRequest {
     String name;
     String type;
     String content;
-    LocalDate dateEntered;
-    Boolean deleted = false;
+    String parentId;
+    String parentType;
+    String employeeId;
 }
