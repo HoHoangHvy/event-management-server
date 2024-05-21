@@ -25,4 +25,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
     Boolean existsByEmail(String email);
     Boolean existsByPhone(String phone);
+
+    @Query("SELECT e FROM Employee e WHERE e.deleted != true AND e.empLevel = 'Manager' AND e.department.id = :departmentId")
+    List<Employee> findManagerByDepartmentId(@Param("departmentId") String departmentId);
+
 }

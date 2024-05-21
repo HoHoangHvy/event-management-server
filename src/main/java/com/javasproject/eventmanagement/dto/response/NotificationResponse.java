@@ -20,4 +20,6 @@ public class NotificationResponse {
     String parentId;
     String parentType;
     Boolean isRead;
+    String newType = "";
+    String userId;
 }

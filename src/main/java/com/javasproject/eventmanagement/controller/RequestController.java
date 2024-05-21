@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/")
@@ -67,6 +69,15 @@ public class RequestController {
         requestService.deleteRequest(requestId);
         apiResponse.setData("Request has been deleted");
         apiResponse.setMessage("Successfully deleted the request.");
+        return apiResponse;
+    }
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/related/requests")
+    public ApiResponse<Map<String, Object>> getRelated(){
+        ApiResponse<Map<String, Object>> apiResponse = new ApiResponse<>();
+        apiResponse.setData(new HashMap<>()); // Set empty Map
+        apiResponse.setMessage("Successfully get the employee's list");
         return apiResponse;
     }
 }

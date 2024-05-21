@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +29,7 @@ public class NotificationController {
         ApiResponse<NotificationResponse> apiResponse = new ApiResponse<>();
         apiResponse.setData(notificationService.createNotification(request));
         apiResponse.setMessage("Successfully created the notification.");
+
         return apiResponse;
     }
 
@@ -68,5 +71,11 @@ public class NotificationController {
         apiResponse.setData("Notification has been deleted");
         apiResponse.setMessage("Successfully deleted the notification.");
         return apiResponse;
+    }
+
+    @MessageMapping("/sendNotification")
+    @SendTo("/topic/notifications")
+    public String sendNotification(String message) {
+        return message;
     }
 }

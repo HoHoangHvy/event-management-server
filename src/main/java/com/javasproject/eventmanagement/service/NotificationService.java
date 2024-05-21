@@ -3,14 +3,17 @@ package com.javasproject.eventmanagement.service;
 import com.javasproject.eventmanagement.dto.request.NotificationCreationRequest;
 import com.javasproject.eventmanagement.dto.request.NotificationCreationRequest;
 import com.javasproject.eventmanagement.dto.response.NotificationResponse;
+import com.javasproject.eventmanagement.entity.New;
 import com.javasproject.eventmanagement.entity.Notification;
 import com.javasproject.eventmanagement.exception.AppException;
 import com.javasproject.eventmanagement.exception.ErrorCode;
 import com.javasproject.eventmanagement.mapper.NotificationMapper;
+import com.javasproject.eventmanagement.repository.NewRepository;
 import com.javasproject.eventmanagement.repository.NotificationRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +27,7 @@ public class NotificationService {
     NotificationMapper notificationMapper;
     EmployeeService employeeService;
     private final UserService userService;
+    SimpMessagingTemplate messagingTemplate;
 
     public NotificationResponse createNotification(NotificationCreationRequest request) {
         Notification notification = new Notification();
@@ -34,7 +38,10 @@ public class NotificationService {
         notification.setParentType(request.getParentType());
         notification.setEmployee(employeeService.getEmployeeObjectById(request.getEmployeeId()));
 
-        return notificationMapper.toNotificationResponse(notificationRepository.save(notification));
+        NotificationResponse notificationResponse = notificationMapper.toNotificationResponse(notificationRepository.save(notification));
+        messagingTemplate.convertAndSendToUser(notificationResponse.getUserId(), "/topic/notifications", notificationResponse);
+
+        return notificationResponse;
     }
 
     public NotificationResponse updateNotification(String notificationId, NotificationCreationRequest request) {
@@ -60,9 +67,20 @@ public class NotificationService {
     }
 
     public List<NotificationResponse> getAllNotifications() {
-        return notificationRepository.findAllActiveByUserId(userService.getCurrentUser().getEmployee()).stream().map(notificationMapper::toNotificationResponse).collect(Collectors.toList());
+        return notificationRepository.findAllActiveByUserId(userService.getCurrentUser().getEmployee()).stream()
+                .map(notificationMapper::toNotificationResponse)
+                .peek(this::handleNotificationResponse).collect(Collectors.toList());
     }
-
+    NewRepository newRepository;
+    private void handleNotificationResponse(NotificationResponse notificationResponse) {
+        if(notificationResponse.getParentType().equals("News")) {
+            newRepository.findById(notificationResponse.getParentId())
+                    .ifPresentOrElse(
+                            newTypeEntity -> notificationResponse.setNewType(newTypeEntity.getType()),
+                            () -> { throw new AppException(ErrorCode.USER_EXISTED); }
+                    );
+        }
+    }
     public NotificationResponse getNotificationById(String id) {
         return notificationRepository.findById(id).map(notificationMapper::toNotificationResponse).orElseThrow(() -> new AppException(ErrorCode.NOTIFICATION_NOT_FOUND));
     }

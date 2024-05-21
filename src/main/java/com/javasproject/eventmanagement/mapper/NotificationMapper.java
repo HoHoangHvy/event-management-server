@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 public interface NotificationMapper {
     Notification toNotification(NotificationCreationRequest request);
     @Mapping(target = "dateEntered", source = "date_entered", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @Mapping(target = "userId", source = "employee.user.id")
     NotificationResponse toNotificationResponse(Notification notification);
 
 }

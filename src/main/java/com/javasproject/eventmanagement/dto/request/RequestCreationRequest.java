@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -15,9 +16,6 @@ public class RequestCreationRequest {
     String name;
     String type;
     String content;
-    LocalDate dateEntered;
-    String status;
-    LocalDate approveDate;
-    String rejectReason;
-    Boolean deleted = false;
+    LocalDateTime dateEntered;
+    String status = "Wait for approval";
 }

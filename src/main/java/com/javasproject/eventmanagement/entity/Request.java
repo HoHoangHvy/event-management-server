@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "requests")
@@ -23,9 +24,9 @@ public class Request {
     String name;
     String type;
     String content;
-    LocalDate date_entered = LocalDate.now();
+    LocalDateTime date_entered = LocalDateTime.now();
     String status;
-    LocalDate approveDate;
+    LocalDateTime approveDate;
     String rejectReason;
     Boolean deleted = false;
 

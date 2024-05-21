@@ -1,8 +1,10 @@
 package com.javasproject.eventmanagement.service;
 
+import com.javasproject.eventmanagement.dto.request.NotificationCreationRequest;
 import com.javasproject.eventmanagement.dto.request.RequestCreationRequest;
 import com.javasproject.eventmanagement.dto.request.RequestCreationRequest;
 import com.javasproject.eventmanagement.dto.response.RequestResponse;
+import com.javasproject.eventmanagement.entity.Employee;
 import com.javasproject.eventmanagement.entity.Request;
 import com.javasproject.eventmanagement.exception.AppException;
 import com.javasproject.eventmanagement.exception.ErrorCode;
@@ -22,18 +24,31 @@ import java.util.stream.Collectors;
 public class RequestService {
     RequestRepository requestRepository;
     RequestMapper requestMapper;
-
+    NotificationService notiService;
+    UserService userService;
+    EmployeeService employeeService;
     public RequestResponse createRequest(RequestCreationRequest request) {
         Request requestEntity = new Request();
         requestEntity.setName(request.getName());
         requestEntity.setType(request.getType());
         requestEntity.setContent(request.getContent());
         requestEntity.setStatus(request.getStatus());
-        requestEntity.setApproveDate(request.getApproveDate());
-        requestEntity.setRejectReason(request.getRejectReason());
-        requestEntity.setDeleted(false);
-
+        requestEntity.setCreatedBy(this.userService.getCurrentUser().getEmployee());
         Request savedRequest = requestRepository.save(requestEntity);
+
+        employeeService.getEmployeeManager(this.userService.getCurrentUser().getEmployee()).forEach(employee -> {
+            if(employee.getStatus().equals("Working") && userService.getCurrentUser().getEmployee().getId() != employee.getId()) {
+                NotificationCreationRequest notiRequest = new NotificationCreationRequest();
+                notiRequest.setName("You have new " + request.getType() + " request from "+ employee.getName());
+                notiRequest.setContent(savedRequest.getContent());
+                notiRequest.setParentId(savedRequest.getId());
+                notiRequest.setType("Notice");
+                notiRequest.setParentType("Request");
+                notiRequest.setEmployeeId(employee.getId());
+                notiService.createNotification(notiRequest);
+            }
+        });
+
         return requestMapper.toRequestResponse(savedRequest);
     }
 
@@ -52,16 +67,6 @@ public class RequestService {
         if (request.getStatus() != null && !request.getStatus().isEmpty()) {
             requestEntity.setStatus(request.getStatus());
         }
-        if (request.getApproveDate() != null) {
-            requestEntity.setApproveDate(request.getApproveDate());
-        }
-        if (request.getRejectReason() != null && !request.getRejectReason().isEmpty()) {
-            requestEntity.setRejectReason(request.getRejectReason());
-        }
-        if (request.getDeleted() != null) {
-            requestEntity.setDeleted(request.getDeleted());
-        }
-
         return requestMapper.toRequestResponse(requestRepository.save(requestEntity));
     }
 
@@ -72,7 +77,14 @@ public class RequestService {
     }
 
     public List<RequestResponse> getAllRequests() {
-        return requestRepository.findAll().stream().map(requestMapper::toRequestResponse).collect(Collectors.toList());
+        Employee currentEmp = this.userService.getCurrentUser().getEmployee();
+        var empLevel = currentEmp.getEmpLevel();
+        if("Manager".equals(empLevel)) {
+            return requestRepository.findAllActiveByDepartmentId(currentEmp.getDepartment()).stream().map(requestMapper::toRequestResponse).collect(Collectors.toList());
+        } else if("Staff".equals(empLevel)) {
+            return requestRepository.findAllActiveByUserId(currentEmp).stream().map(requestMapper::toRequestResponse).collect(Collectors.toList());
+        }
+        return requestRepository.findAllByDeleted(false).stream().map(requestMapper::toRequestResponse).collect(Collectors.toList());
     }
 
     public RequestResponse getRequestById(String id) {

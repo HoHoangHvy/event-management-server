@@ -19,6 +19,6 @@ public class RequestResponse {
     String dateEntered;
     String status;
     String approveDate;
-    String rejectReason;
     Boolean deleted;
+    String employeeName;
 }

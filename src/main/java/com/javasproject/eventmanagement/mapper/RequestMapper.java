@@ -9,7 +9,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface RequestMapper {
     Request toRequest(RequestCreationRequest request);
-    @Mapping(target = "dateEntered", source = "date_entered", dateFormat = "yyyy-MM-dd")
-    @Mapping(target = "approveDate", source = "approveDate", dateFormat = "yyyy-MM-dd")
+    @Mapping(target = "dateEntered", source = "date_entered", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @Mapping(target = "approveDate", source = "approveDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @Mapping(target = "employeeName", source = "createdBy.name")
     RequestResponse toRequestResponse(Request request);
 }

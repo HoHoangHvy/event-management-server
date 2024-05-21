@@ -124,4 +124,8 @@ public class EmployeeService {
         List<OptionResponse> roleList = roleService.getAllOption();
         return Map.of("departmentId", departmentList, "roleId", roleList);
     }
+
+    public List<Employee> getEmployeeManager(Employee emp) {
+        return employeeRepository.findManagerByDepartmentId(emp.getDepartment().getId());
+    }
 }

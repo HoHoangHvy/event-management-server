@@ -33,7 +33,7 @@ public class NewService {
         news.setEmployee(userService.getCurrentUser().getEmployee());
         New savedNews = newsRepository.save(news);
         employeeService.getAllEmployee().forEach(employee -> {
-            if(employee.getStatus().equals("Working")) {
+            if(employee.getStatus().equals("Working") && userService.getCurrentUser().getEmployee().getId() != employee.getId()) {
                 NotificationCreationRequest notiRequest = new NotificationCreationRequest();
                 notiRequest.setName("You have new news: " + savedNews.getName());
                 notiRequest.setContent(savedNews.getContent());
