@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,7 +40,7 @@ public class RequestService {
         employeeService.getEmployeeManager(this.userService.getCurrentUser().getEmployee()).forEach(employee -> {
             if(employee.getStatus().equals("Working") && userService.getCurrentUser().getEmployee().getId() != employee.getId()) {
                 NotificationCreationRequest notiRequest = new NotificationCreationRequest();
-                notiRequest.setName("You have new " + request.getType() + " request from "+ employee.getName());
+                notiRequest.setName("You have new " + request.getType() + " request from "+ this.userService.getCurrentUser().getEmployee().getName());
                 notiRequest.setContent(savedRequest.getContent());
                 notiRequest.setParentId(savedRequest.getId());
                 notiRequest.setType("Notice");
@@ -66,6 +67,29 @@ public class RequestService {
         }
         if (request.getStatus() != null && !request.getStatus().isEmpty()) {
             requestEntity.setStatus(request.getStatus());
+            if("Approved".equals(request.getStatus())) {
+                requestEntity.setApprovedBy(this.userService.getCurrentUser().getEmployee());
+                requestEntity.setApproveDate(LocalDateTime.now());
+                this.notiService.createNotification(NotificationCreationRequest.builder()
+                        .name("Your " +requestEntity.getType()+ "request has been approved")
+                        .content("Your request has been approved by " + this.userService.getCurrentUser().getEmployee().getName())
+                        .type("Notice")
+                        .parentType("Request")
+                        .parentId(requestId)
+                        .employeeId(requestEntity.getCreatedBy().getId())
+                        .build());
+            }
+        }
+        if (request.getRejectReason() != null) {
+            requestEntity.setRejectReason(request.getRejectReason());
+            this.notiService.createNotification(NotificationCreationRequest.builder()
+                    .name("Your " +requestEntity.getType()+ "request has been rejected")
+                    .content("Your request has been rejected by " + this.userService.getCurrentUser().getEmployee().getName() + " with reason: " + request.getRejectReason())
+                    .type("Notice")
+                    .parentType("Request")
+                    .parentId(requestId)
+                    .employeeId(requestEntity.getCreatedBy().getId())
+                    .build());
         }
         return requestMapper.toRequestResponse(requestRepository.save(requestEntity));
     }

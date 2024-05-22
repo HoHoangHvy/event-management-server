@@ -3,7 +3,6 @@ package com.javasproject.eventmanagement.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
 
 @Setter
 @Getter
@@ -21,4 +20,7 @@ public class RequestResponse {
     String approveDate;
     Boolean deleted;
     String employeeName;
+    String rejectReason = "";
+    String approvedByName = "";
+
 }
