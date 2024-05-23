@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -27,4 +28,7 @@ public class Department {
     Boolean deleted = false;
     @OneToMany(mappedBy = "department")
     Set<Employee> employees;
+
+    @OneToMany(mappedBy = "department")
+    List<RequestDepartment> requestDepartments;
 }

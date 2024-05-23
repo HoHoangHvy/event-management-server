@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "requests")
@@ -37,4 +38,9 @@ public class Request {
     @ManyToOne
     @JoinColumn(name = "approved_by")
     Employee approvedBy;
+
+    @OneToMany(mappedBy = "request")
+    List<RequestDepartment> requestDepartments;
+
+
 }

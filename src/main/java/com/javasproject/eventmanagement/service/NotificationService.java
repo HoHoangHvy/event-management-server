@@ -27,7 +27,7 @@ public class NotificationService {
     NotificationMapper notificationMapper;
     EmployeeService employeeService;
     private final UserService userService;
-    SimpMessagingTemplate messagingTemplate;
+    SocketService socketService;
 
     public NotificationResponse createNotification(NotificationCreationRequest request) {
         Notification notification = new Notification();
@@ -39,8 +39,7 @@ public class NotificationService {
         notification.setEmployee(employeeService.getEmployeeObjectById(request.getEmployeeId()));
 
         NotificationResponse notificationResponse = notificationMapper.toNotificationResponse(notificationRepository.save(notification));
-        messagingTemplate.convertAndSendToUser(notificationResponse.getUserId(), "/topic/notifications", notificationResponse);
-
+        socketService.pushMessage(notificationResponse, "/notifications/HoHoangHvy/" + notification.getEmployee().getUser().getId());
         return notificationResponse;
     }
 
@@ -56,7 +55,9 @@ public class NotificationService {
         if (request.getContent() != null && !request.getContent().isEmpty()) {
             notification.setContent(request.getContent());
         }
-
+        if (request.getIsRead() != null) {
+            notification.setIsRead(request.getIsRead());
+        }
         return notificationMapper.toNotificationResponse(notificationRepository.save(notification));
     }
 
@@ -83,5 +84,11 @@ public class NotificationService {
     }
     public NotificationResponse getNotificationById(String id) {
         return notificationRepository.findById(id).map(notificationMapper::toNotificationResponse).orElseThrow(() -> new AppException(ErrorCode.NOTIFICATION_NOT_FOUND));
+    }
+
+    public List<NotificationResponse> getUnreadNoti() {
+        return notificationRepository.findAllActiveUnreadByUserId(userService.getCurrentUser().getEmployee()).stream()
+                .map(notificationMapper::toNotificationResponse)
+                .peek(this::handleNotificationResponse).collect(Collectors.toList());
     }
 }

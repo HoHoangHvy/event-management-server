@@ -46,6 +46,18 @@ public class NotificationController {
     }
 
     @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/notifications/unread")
+    public ApiResponse<ListResponse> getAllUnreadNotifications() {
+        ApiResponse<ListResponse> apiResponse = new ApiResponse<>();
+        var listResponse = new ListResponse<NotificationResponse>();
+        List<NotificationResponse> notifications = notificationService.getUnreadNoti();
+        listResponse.setListData(notifications);
+        apiResponse.setData(listResponse);
+        apiResponse.setMessage("Successfully retrieved the notification list.");
+        return apiResponse;
+    }
+
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/notifications/{notificationId}")
     public ResponseEntity<ApiResponse<NotificationResponse>> getNotificationById(@PathVariable("notificationId") String notificationId) {
         ApiResponse<NotificationResponse> apiResponse = new ApiResponse<>();
@@ -73,9 +85,4 @@ public class NotificationController {
         return apiResponse;
     }
 
-    @MessageMapping("/sendNotification")
-    @SendTo("/topic/notifications")
-    public String sendNotification(String message) {
-        return message;
-    }
 }

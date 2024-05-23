@@ -16,4 +16,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Stri
     // Fetch active employees (logical deletion handled via the "deleted" field)
     @Query("SELECT e FROM Notification e WHERE e.deleted != true AND e.employee = :employee  ORDER BY e.date_entered DESC")
     List<Notification> findAllActiveByUserId(@Param("employee") Employee employee);
+
+    @Query("SELECT e FROM Notification e WHERE e.deleted != true AND e.isRead = false AND e.employee = :employee  ORDER BY e.date_entered DESC")
+    List<Notification> findAllActiveUnreadByUserId(@Param("employee") Employee employee);
 }

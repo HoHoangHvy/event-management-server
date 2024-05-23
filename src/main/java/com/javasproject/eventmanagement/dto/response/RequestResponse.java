@@ -1,7 +1,10 @@
 package com.javasproject.eventmanagement.dto.response;
 
+import com.javasproject.eventmanagement.entity.RequestDepartment;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 
 @Setter
@@ -22,5 +25,5 @@ public class RequestResponse {
     String employeeName;
     String rejectReason = "";
     String approvedByName = "";
-
+    List<RequestDepartmentListResponse> requestDepartments;
 }

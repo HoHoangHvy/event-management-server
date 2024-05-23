@@ -15,6 +15,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
@@ -75,5 +76,9 @@ public class ApplicationInitConfig {
         roleCreationRequest.setPermission(permissions);
         Optional<Role> adminRole = Optional.ofNullable(roleService.create(roleCreationRequest));
         return adminRole.orElse(null);
+    }
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 }

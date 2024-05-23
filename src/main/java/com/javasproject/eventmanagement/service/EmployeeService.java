@@ -50,7 +50,7 @@ public class EmployeeService {
         employee.setDob(request.getDob().plusDays(1));
         employee.setEmail(request.getEmail());
 
-        Department department = departmentService.getById(request.getDepartmentId()).orElse(null);
+        Department department = departmentService.getObjectById(request.getDepartmentId());
         employee.setDepartment(department);
 
         Employee savedEmployee = employeeRepository.save(employee);
@@ -93,7 +93,7 @@ public class EmployeeService {
             userService.updateUserRole(employee.getId(), request.getRoleId());
         }
         if(request.getDepartmentId() != null && !request.getDepartmentId().isEmpty()){
-            Department department = departmentService.getById(request.getDepartmentId()).orElse(null);
+            Department department = departmentService.getObjectById(request.getDepartmentId());
             employee.setDepartment(department);
         }
 
@@ -128,4 +128,10 @@ public class EmployeeService {
     public List<Employee> getEmployeeManager(Employee emp) {
         return employeeRepository.findManagerByDepartmentId(emp.getDepartment().getId());
     }
+
+    public List<Employee> getEmployeeManagerByDepartment(Department department){
+        return employeeRepository.findManagerByDepartmentId(department.getId());
+    }
+
+
 }

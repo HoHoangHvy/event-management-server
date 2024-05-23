@@ -51,7 +51,7 @@ public class DepartmentController {
     @GetMapping("departments/{id}")
     public ApiResponse<DepartmentResponse> getDepartmentById(@PathVariable String id){
         ApiResponse<DepartmentResponse> response = new ApiResponse<>();
-        response.setData(departmentService.getById(id).map(departmentMapper::toDepartmentResponse).orElse(null));
+        response.setData(departmentService.getById(id));
         return response;
     }
     @CrossOrigin(origins = "http://localhost:4200")

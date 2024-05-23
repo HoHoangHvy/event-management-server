@@ -15,7 +15,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,8 +40,11 @@ public class DepartmentService {
         return departmentRepository.findAll().stream().map(departmentMapper::toOptionResponse).collect(Collectors.toList());
     }
 
-    public Optional<Department> getById(String id){
-        return departmentRepository.findById(id);
+    public DepartmentResponse getById(String id){
+        return departmentRepository.findById(id).map(departmentMapper::toDepartmentResponse).orElseThrow(() -> new RuntimeException("Department not found"));
+    }
+    public Department getObjectById(String id){
+        return departmentRepository.findById(id).orElseThrow(() -> new RuntimeException("Department not found"));
     }
 
     public Boolean deleteById(String id){

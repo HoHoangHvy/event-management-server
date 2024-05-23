@@ -1,14 +1,16 @@
 package com.javasproject.eventmanagement.service;
 
-import com.javasproject.eventmanagement.dto.request.NotificationCreationRequest;
-import com.javasproject.eventmanagement.dto.request.RequestCreationRequest;
+import com.javasproject.eventmanagement.dto.request.*;
 import com.javasproject.eventmanagement.dto.request.RequestCreationRequest;
 import com.javasproject.eventmanagement.dto.response.RequestResponse;
 import com.javasproject.eventmanagement.entity.Employee;
 import com.javasproject.eventmanagement.entity.Request;
+import com.javasproject.eventmanagement.entity.RequestDepartment;
 import com.javasproject.eventmanagement.exception.AppException;
 import com.javasproject.eventmanagement.exception.ErrorCode;
+import com.javasproject.eventmanagement.mapper.RequestDepartmentMapper;
 import com.javasproject.eventmanagement.mapper.RequestMapper;
+import com.javasproject.eventmanagement.repository.RequestDepartmentRepository;
 import com.javasproject.eventmanagement.repository.RequestRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +39,7 @@ public class RequestService {
         requestEntity.setStatus(request.getStatus());
         requestEntity.setCreatedBy(this.userService.getCurrentUser().getEmployee());
         Request savedRequest = requestRepository.save(requestEntity);
-
+        this.createForwardRequest(savedRequest);
         employeeService.getEmployeeManager(this.userService.getCurrentUser().getEmployee()).forEach(employee -> {
             if(employee.getStatus().equals("Working") && userService.getCurrentUser().getEmployee().getId() != employee.getId()) {
                 NotificationCreationRequest notiRequest = new NotificationCreationRequest();
@@ -52,7 +55,15 @@ public class RequestService {
 
         return requestMapper.toRequestResponse(savedRequest);
     }
-
+    RequestDepartmentRepository requestDepartmentRepository;
+    public Boolean createForwardRequest(Request requestEntity) {
+        RequestDepartment requestDepartmentObject = new RequestDepartment();
+        requestDepartmentObject.setDepartment(requestEntity.getCreatedBy().getDepartment());
+        requestDepartmentObject.setNote("Check and handle this request");
+        requestDepartmentObject.setRequest(requestEntity);
+        requestDepartmentRepository.save(requestDepartmentObject);
+        return true;
+    }
     public RequestResponse updateRequest(String requestId, RequestCreationRequest request) {
         Request requestEntity = requestRepository.findById(requestId).orElseThrow(() -> new AppException(ErrorCode.REQUEST_NOT_FOUND));
 
@@ -71,7 +82,7 @@ public class RequestService {
                 requestEntity.setApprovedBy(this.userService.getCurrentUser().getEmployee());
                 requestEntity.setApproveDate(LocalDateTime.now());
                 this.notiService.createNotification(NotificationCreationRequest.builder()
-                        .name("Your " +requestEntity.getType()+ "request has been approved")
+                        .name("Your " +requestEntity.getType()+ " request has been approved")
                         .content("Your request has been approved by " + this.userService.getCurrentUser().getEmployee().getName())
                         .type("Notice")
                         .parentType("Request")
@@ -80,10 +91,10 @@ public class RequestService {
                         .build());
             }
         }
-        if (request.getRejectReason() != null) {
+        if (request.getRejectReason() != null && "Rejected".equals(request.getStatus())) {
             requestEntity.setRejectReason(request.getRejectReason());
             this.notiService.createNotification(NotificationCreationRequest.builder()
-                    .name("Your " +requestEntity.getType()+ "request has been rejected")
+                    .name("Your " +requestEntity.getType()+ " request has been rejected")
                     .content("Your request has been rejected by " + this.userService.getCurrentUser().getEmployee().getName() + " with reason: " + request.getRejectReason())
                     .type("Notice")
                     .parentType("Request")
@@ -104,14 +115,24 @@ public class RequestService {
         Employee currentEmp = this.userService.getCurrentUser().getEmployee();
         var empLevel = currentEmp.getEmpLevel();
         if("Manager".equals(empLevel)) {
-            return requestRepository.findAllActiveByDepartmentId(currentEmp.getDepartment()).stream().map(requestMapper::toRequestResponse).collect(Collectors.toList());
+            return currentEmp.getDepartment().getRequestDepartments().stream()
+                    .map(RequestDepartment::getRequest)  // Assuming getRequest() returns a single Request
+                    .map(requestMapper::toRequestResponse)
+                    .sorted(Comparator.comparing(RequestResponse::getDateEntered).reversed())
+                    .collect(Collectors.toList());
         } else if("Staff".equals(empLevel)) {
             return requestRepository.findAllActiveByUserId(currentEmp).stream().map(requestMapper::toRequestResponse).collect(Collectors.toList());
         }
         return requestRepository.findAllByDeleted(false).stream().map(requestMapper::toRequestResponse).collect(Collectors.toList());
     }
-
+    RequestDepartmentMapper requestDepartmentMapper;
     public RequestResponse getRequestById(String id) {
-        return requestRepository.findById(id).map(requestMapper::toRequestResponse).orElseThrow(() -> new AppException(ErrorCode.REQUEST_NOT_FOUND));
+        RequestResponse requestResponse = requestMapper.toRequestResponse(requestRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.REQUEST_NOT_FOUND)));
+        Request request = requestRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.REQUEST_NOT_FOUND));
+        requestResponse.setRequestDepartments(request.getRequestDepartments().stream().map(requestDepartmentMapper::toRequestDepartmentListResponse).collect(Collectors.toList()));
+        return requestResponse;
+    }
+    public Request getRequestObjectById (String id) {
+        return requestRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.REQUEST_NOT_FOUND));
     }
 }

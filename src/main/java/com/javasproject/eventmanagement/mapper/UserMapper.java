@@ -10,10 +10,12 @@ import org.mapstruct.Mapping;
 
 import java.util.Optional;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {EmployeeMapper.class})
 public interface UserMapper {
     User toUser(UserCreationRequest request);
     User toUserFromUpdate(UserUpdateRequest request);
+
+    @Mapping(target = "employee", source="employee", qualifiedByName = "toEmployeeResponse")
     UserResponse toUserResponse(User user);
 
     @Mapping(target = "roleName", source = "role.name")

@@ -18,4 +18,5 @@ public class NotificationCreationRequest {
     String parentId;
     String parentType;
     String employeeId;
+    Boolean isRead = false;
 }

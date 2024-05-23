@@ -33,7 +33,6 @@ public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = {
             "/auth/token",
             "/auth/introspect",
-            "/ws/**"
     };
     @Value("${jwt.signerKey}")
     private String SIGNER_KEY;
@@ -42,9 +41,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(request ->
                 request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers("/users").hasAnyRole("ADMIN")
-                        .requestMatchers("/ws/**").authenticated() // Secure WebSocket endpoints
                         .anyRequest().authenticated()
         );
         httpSecurity.cors(Customizer.withDefaults());
@@ -92,15 +89,5 @@ public class SecurityConfig {
 
             }
         };
-    }
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
-        configuration.setAllowedMethods(Arrays.asList("*"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
     }
 }
