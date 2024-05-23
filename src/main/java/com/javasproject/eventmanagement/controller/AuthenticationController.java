@@ -68,7 +68,8 @@ public class AuthenticationController {
                     module.put("moduleName", k);
                     if(k == "News") {
                         module.put("route", "base/new-feed");
-                    } else module.put("route", "base/list/" + k.toLowerCase());
+                    } else if(k == "ResourceBooking") module.put("route", "base/booking-schedule");
+                    else module.put("route", "base/list/" + k.toLowerCase());
                     module.put("icon", getIconByModuleName(k));
                     moduleList.add(module);
                 }

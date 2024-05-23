@@ -1,9 +1,10 @@
 package com.javasproject.eventmanagement.dto.request;
 
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -11,8 +12,12 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ResourceCreationRequest {
-    String name;
-    String type;
-    int totalQuantity;
+public class ResourceBookingRequest {
+
+    String resourceId;
+    String employeeId;
+    LocalDateTime startDate;
+    LocalDateTime endDate;
+    int quantity;
+    String status;
 }

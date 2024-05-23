@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -29,4 +30,13 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
     @Query("SELECT e FROM Employee e WHERE e.deleted != true AND e.empLevel = 'Manager' AND e.department.id = :departmentId")
     List<Employee> findManagerByDepartmentId(@Param("departmentId") String departmentId);
 
-}
+
+    @Query("SELECT e FROM Employee e WHERE MONTH(e.dob) = :month AND DAY(e.dob) = :day")
+    List<Employee> findAllByDobMonthAndDay(@Param("month") int month, @Param("day") int day);
+
+    default List<Employee> findAllWithDobToday() {
+        LocalDate today = LocalDate.now();
+        int month = today.getMonthValue();
+        int day = today.getDayOfMonth();
+        return findAllByDobMonthAndDay(month, day);
+    }}

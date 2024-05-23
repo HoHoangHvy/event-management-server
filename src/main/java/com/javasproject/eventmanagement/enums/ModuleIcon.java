@@ -21,6 +21,7 @@ public enum ModuleIcon {
     Requests("cilCopy"),
     Resources("cilFactory"),
     News("cilFax"),
+    ResourceBooking("cilFax"),
     ;
     private final String icon;
 }

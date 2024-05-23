@@ -28,7 +28,6 @@ public class ResourceService {
         resource.setName(request.getName());
         resource.setType(request.getType());
         resource.setTotalQuantity(request.getTotalQuantity());
-        resource.setDeleted(false);
 
         Resource savedResource = resourceRepository.save(resource);
         return resourceMapper.toResourceResponse(savedResource);
@@ -46,9 +45,6 @@ public class ResourceService {
         if (request.getTotalQuantity() != 0) {
             resource.setTotalQuantity(request.getTotalQuantity());
         }
-        if (request.getDeleted() != null) {
-            resource.setDeleted(request.getDeleted());
-        }
 
         return resourceMapper.toResourceResponse(resourceRepository.save(resource));
     }
@@ -65,5 +61,8 @@ public class ResourceService {
 
     public ResourceResponse getResourceById(String id) {
         return resourceRepository.findById(id).map(resourceMapper::toResourceResponse).orElseThrow(() -> new AppException(ErrorCode.RESOURCE_NOT_FOUND));
+    }
+    public Resource getResourceObjectById(String id) {
+        return resourceRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.RESOURCE_NOT_FOUND));
     }
 }

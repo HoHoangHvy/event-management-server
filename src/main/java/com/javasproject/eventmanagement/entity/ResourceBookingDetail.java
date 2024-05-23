@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "resource_booking_details")
@@ -20,11 +21,11 @@ public class ResourceBookingDetail {
     @Column(nullable = false)
     String id;
 
-    LocalDate startDate;
-    LocalDate endDate;
+    LocalDateTime startDate;
+    LocalDateTime endDate;
     int quantity;
     String status;
-    LocalDate dateEntered;
+    LocalDateTime dateEntered;
     Boolean deleted = false;
 
     @ManyToOne

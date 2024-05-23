@@ -109,6 +109,9 @@ public class EmployeeService {
     public List<EmployeeResponse> getAllEmployee() {
         return employeeRepository.findAllActive().stream().map(employeeMapper::toEmployeeResponse).collect(Collectors.toList());
     }
+    public List<Employee> getAllEmployeeBirthday() {
+        return employeeRepository.findAllWithDobToday();
+    }
     public long countAllEmployee() {
         return employeeRepository.count() - 1;
     }

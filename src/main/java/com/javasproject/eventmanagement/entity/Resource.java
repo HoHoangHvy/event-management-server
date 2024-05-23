@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -24,7 +25,7 @@ public class Resource {
     String name;
     String type;
     int totalQuantity;
-    LocalDate date_entered = LocalDate.now();
+    LocalDateTime dateEntered = LocalDateTime.now();
     Boolean deleted = false;
 
     @OneToMany(mappedBy = "resource")

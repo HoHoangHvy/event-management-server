@@ -3,8 +3,6 @@ package com.javasproject.eventmanagement.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
-
 @Setter
 @Getter
 @NoArgsConstructor
@@ -16,6 +14,6 @@ public class ResourceResponse {
     String name;
     String type;
     int totalQuantity;
-    LocalDate dateEntered;
+    String dateEntered;
     Boolean deleted;
 }

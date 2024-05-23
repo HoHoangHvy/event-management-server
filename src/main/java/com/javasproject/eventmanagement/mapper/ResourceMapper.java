@@ -9,6 +9,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ResourceMapper {
     Resource toResource(ResourceCreationRequest request);
-    @Mapping(target = "dateEntered", source = "date_entered", dateFormat = "yyyy-MM-dd")
+    @Mapping(target = "dateEntered", source = "dateEntered", dateFormat = "yyyy-MM-dd HH:mm:ss")
     ResourceResponse toResourceResponse(Resource resource);
 }
