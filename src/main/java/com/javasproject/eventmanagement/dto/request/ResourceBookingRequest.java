@@ -13,11 +13,10 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ResourceBookingRequest {
-
     String resourceId;
-    String employeeId;
     LocalDateTime startDate;
     LocalDateTime endDate;
     int quantity;
-    String status;
+    String status = "Wait for approval";
+    String reason;
 }

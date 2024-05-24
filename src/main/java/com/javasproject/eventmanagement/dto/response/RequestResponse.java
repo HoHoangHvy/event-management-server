@@ -4,6 +4,8 @@ import com.javasproject.eventmanagement.entity.RequestDepartment;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -19,6 +21,7 @@ public class RequestResponse {
     String type;
     String content;
     String dateEntered;
+    LocalDateTime dateEnteredLocal;
     String status;
     String approveDate;
     Boolean deleted;

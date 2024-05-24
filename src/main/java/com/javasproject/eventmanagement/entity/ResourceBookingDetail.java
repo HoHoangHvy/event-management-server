@@ -23,9 +23,10 @@ public class ResourceBookingDetail {
 
     LocalDateTime startDate;
     LocalDateTime endDate;
-    int quantity;
+    Integer quantity;
     String status;
-    LocalDateTime dateEntered;
+    String reason;
+    LocalDateTime dateEntered = LocalDateTime.now();
     Boolean deleted = false;
 
     @ManyToOne
@@ -35,4 +36,7 @@ public class ResourceBookingDetail {
     @ManyToOne
     @JoinColumn(name = "resource_id")
     Resource resource;
+
+    @OneToOne(mappedBy = "resourceBookingDetail")
+    Request request;
 }

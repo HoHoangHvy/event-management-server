@@ -9,9 +9,11 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +46,20 @@ public class ResourceController {
         return apiResponse;
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/resources/available")
+    public ApiResponse<ListResponse<ResourceResponse>> getAllAvailableResources(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+
+        ApiResponse<ListResponse<ResourceResponse>> apiResponse = new ApiResponse<>();
+        var listResponse = new ListResponse<ResourceResponse>();
+        List<ResourceResponse> resources = resourceService.getAllAvailableResources(startDate, endDate);
+        listResponse.setListData(resources);
+        apiResponse.setData(listResponse);
+        apiResponse.setMessage("Successfully retrieved the resource list.");
+        return apiResponse;
+    }
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/resources/{resourceId}")
     public ResponseEntity<ApiResponse<ResourceResponse>> getResourceById(@PathVariable("resourceId") String resourceId) {
@@ -79,5 +95,4 @@ public class ResourceController {
         apiResponse.setMessage("Successfully get the employee's list");
         return apiResponse;
     }
-
 }

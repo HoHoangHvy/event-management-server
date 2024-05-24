@@ -16,5 +16,5 @@ public class RequestCreationRequest {
     String content;
     String status = "Wait for approval";
     String rejectReason = "";
-
+    String resourceBookingId;
 }

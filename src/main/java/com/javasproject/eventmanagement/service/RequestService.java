@@ -12,6 +12,7 @@ import com.javasproject.eventmanagement.mapper.RequestDepartmentMapper;
 import com.javasproject.eventmanagement.mapper.RequestMapper;
 import com.javasproject.eventmanagement.repository.RequestDepartmentRepository;
 import com.javasproject.eventmanagement.repository.RequestRepository;
+import com.javasproject.eventmanagement.repository.ResourceBookingRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -38,6 +39,9 @@ public class RequestService {
         requestEntity.setContent(request.getContent());
         requestEntity.setStatus(request.getStatus());
         requestEntity.setCreatedBy(this.userService.getCurrentUser().getEmployee());
+        if(requestEntity.getType() == "Resource") {
+            requestEntity.setResourceBookingDetail(this.rbRepository.findById(request.getResourceBookingId()).orElseThrow(() -> new AppException(ErrorCode.EMAIL_EXISTED)));
+        }
         Request savedRequest = requestRepository.save(requestEntity);
         this.createForwardRequest(savedRequest);
         employeeService.getEmployeeManager(this.userService.getCurrentUser().getEmployee()).forEach(employee -> {
@@ -64,6 +68,7 @@ public class RequestService {
         requestDepartmentRepository.save(requestDepartmentObject);
         return true;
     }
+    ResourceBookingRepository rbRepository;
     public RequestResponse updateRequest(String requestId, RequestCreationRequest request) {
         Request requestEntity = requestRepository.findById(requestId).orElseThrow(() -> new AppException(ErrorCode.REQUEST_NOT_FOUND));
 
@@ -89,6 +94,9 @@ public class RequestService {
                         .parentId(requestId)
                         .employeeId(requestEntity.getCreatedBy().getId())
                         .build());
+                if("Resource".equals(requestEntity.getType())) {
+                    this.rbRepository.updateStatusById(requestEntity.getResourceBookingDetail().getId(), "Approved");
+                }
             }
         }
         if (request.getRejectReason() != null && "Rejected".equals(request.getStatus())) {
@@ -118,7 +126,7 @@ public class RequestService {
             return currentEmp.getDepartment().getRequestDepartments().stream()
                     .map(RequestDepartment::getRequest)  // Assuming getRequest() returns a single Request
                     .map(requestMapper::toRequestResponse)
-                    .sorted(Comparator.comparing(RequestResponse::getDateEntered).reversed())
+                    .sorted(Comparator.comparing(RequestResponse::getDateEnteredLocal).reversed())
                     .collect(Collectors.toList());
         } else if("Staff".equals(empLevel)) {
             return requestRepository.findAllActiveByUserId(currentEmp).stream().map(requestMapper::toRequestResponse).collect(Collectors.toList());

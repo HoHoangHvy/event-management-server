@@ -42,5 +42,8 @@ public class Request {
     @OneToMany(mappedBy = "request")
     List<RequestDepartment> requestDepartments;
 
+    @OneToOne
+    @JoinColumn(name = "resource_booking_id")
+    ResourceBookingDetail resourceBookingDetail;
 
 }

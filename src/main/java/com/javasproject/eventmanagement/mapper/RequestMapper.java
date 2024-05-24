@@ -12,6 +12,7 @@ public interface RequestMapper {
     Request toRequest(RequestCreationRequest request);
 
     @Mapping(target = "dateEntered", source = "date_entered", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @Mapping(target = "dateEnteredLocal", source = "date_entered", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @Mapping(target = "approveDate", source = "approveDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @Mapping(target = "employeeName", source = "createdBy.name")
     @Mapping(target = "approvedByName", source = "approvedBy.name")

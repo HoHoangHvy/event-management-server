@@ -30,4 +30,7 @@ public class Resource {
 
     @OneToMany(mappedBy = "resource")
     List<ResourceBookingDetail> bookingDetails;
+
+    @Transient
+    int availableQuantity;
 }

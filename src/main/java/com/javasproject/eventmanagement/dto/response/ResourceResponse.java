@@ -14,6 +14,7 @@ public class ResourceResponse {
     String name;
     String type;
     int totalQuantity;
+    int availableQuantity;
     String dateEntered;
     Boolean deleted;
 }
