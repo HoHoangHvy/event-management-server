@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,7 +26,7 @@ public class Dish {
     long cost;
     String unit;
     Boolean deleted = false;
-    LocalDate date_entered = LocalDate.now();
+    LocalDateTime dateEntered = LocalDateTime.now();
 
     @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL)
     private Set<EventDetailDish> eventDetailDishes = new HashSet<>();

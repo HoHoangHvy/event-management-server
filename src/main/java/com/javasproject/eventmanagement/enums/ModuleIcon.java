@@ -16,12 +16,14 @@ public enum ModuleIcon {
     Events("cilInstitution"),
     Facilities("cilLineWeight"),
     Tasks("cilTask"),
-    ThirdParties("cilHandshake"),
+    Thirdparties("cilHandshake"),
     Notifications("cilBell"),
     Requests("cilCopy"),
     Resources("cilFactory"),
     News("cilFax"),
     ResourceBooking("cilFax"),
+    EventBooking("cilFax"),
+    Halls("cilFax"),
     ;
     private final String icon;
 }

@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface RequestDepartmentRepository extends JpaRepository<RequestDepartment,String> {
 
-
+    List<RequestDepartment> findAllByDeletedFalse();
     List<RequestDepartment> findRequestDepartmentsByRequest(Request request);
 }

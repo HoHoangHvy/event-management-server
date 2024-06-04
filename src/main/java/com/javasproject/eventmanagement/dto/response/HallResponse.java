@@ -3,7 +3,6 @@ package com.javasproject.eventmanagement.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -12,13 +11,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CustomerResponse {
+public class HallResponse {
     String id;
     String name;
-    String phone;
-    String email;
-    String type;
-    String dob;
+    int scale;
+    String location;
     String dateEntered;
+    Boolean inUse;
     Boolean deleted;
 }

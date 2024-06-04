@@ -27,7 +27,7 @@ public class ContractService {
     }
     public List<Contract> getContractList(){
 
-        return contractRepository.findAll();
+        return contractRepository.findAllByDeletedFalse();
     }
     public Boolean deleteById(String id){
         if(contractRepository.existsById(id)){

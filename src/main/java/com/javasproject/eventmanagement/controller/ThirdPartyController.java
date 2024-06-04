@@ -1,70 +1,84 @@
 package com.javasproject.eventmanagement.controller;
 
 import com.javasproject.eventmanagement.dto.request.ApiResponse;
-import com.javasproject.eventmanagement.entity.ThirdParty;
+import com.javasproject.eventmanagement.dto.request.ThirdPartyCreationRequest;
+import com.javasproject.eventmanagement.dto.response.ThirdPartyResponse;
+import com.javasproject.eventmanagement.dto.response.ListResponse;
 import com.javasproject.eventmanagement.service.ThirdPartyService;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequestMapping("/thirdparties")
+@RequestMapping("/api/")
 public class ThirdPartyController {
-    @Autowired
-    ThirdPartyService thirdPartyService;
-    @PostMapping
-    public ApiResponse<ThirdParty> createThirdParty(@RequestBody ThirdParty thirdParty){
-        return ApiResponse.<ThirdParty>builder()
-                .data(thirdPartyService.upsert(thirdParty))
-                .build();
-    }
-    @GetMapping("/{id}")
-    public ApiResponse<ThirdParty> getThirdPartyById(@PathVariable String id){
-        String message = "Successfully get the third party";
-        ThirdParty thirdParty = thirdPartyService.getById(id);
-        if (thirdParty == null){
-            message = "Not found this third party";
-        }
-        return ApiResponse.<ThirdParty>builder()
-                .data(thirdParty)
-                .message(message)
-                .build();
-    }
-    @GetMapping
-    public ApiResponse<List<ThirdParty>> getAllThirdParties(){
-        String message = "Successfully get the third party list";
-        List<ThirdParty> thirdPartyList = thirdPartyService.getThirdPartyList();
-        if(thirdPartyList.isEmpty()){
-            message = "ThirdParty list is empty";
 
-        }
-        return ApiResponse.<List<ThirdParty>>builder()
-                .data(thirdPartyList)
-                .message(message)
-                .build();
+    @Autowired
+    private ThirdPartyService thirdPartyService;
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PostMapping("/thirdparties")
+    public ApiResponse<ThirdPartyResponse> createThirdParty(@RequestBody ThirdPartyCreationRequest request) {
+        ApiResponse<ThirdPartyResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setData(thirdPartyService.createThirdParty(request));
+        apiResponse.setMessage("Successfully created the third party.");
+        return apiResponse;
     }
-    @PutMapping
-    public ApiResponse<ThirdParty> updateThirdParty(@RequestBody ThirdParty thirdParty){
-        return ApiResponse.<ThirdParty>builder()
-                .data(thirdPartyService.upsert(thirdParty))
-                .build();
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/thirdparties")
+    public ApiResponse<ListResponse> getAllThirdParties() {
+        ApiResponse<ListResponse> apiResponse = new ApiResponse<>();
+        var listResponse = new ListResponse<ThirdPartyResponse>();
+        List<ThirdPartyResponse> thirdParties = thirdPartyService.getAllThirdParties();
+        long totalData = thirdPartyService.countAllThirdParties();
+        listResponse.setListData(thirdParties);
+        listResponse.setTotalData(totalData);
+
+        apiResponse.setData(listResponse);
+        apiResponse.setMessage("Successfully retrieved the third party list.");
+        return apiResponse;
     }
-    @DeleteMapping("/{id}")
-    public ApiResponse<String> deleteThirdParty(@PathVariable String id){
-        String message = "Delete successfully";
-        Boolean status = thirdPartyService.deleteById(id);
-        if (!status){
-            message = "Delete fail! Not found this record";
-        }
-        return ApiResponse.<String>builder()
-                .message(message)
-                .build();
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/thirdparties/{thirdPartyId}")
+    public ResponseEntity<ApiResponse<ThirdPartyResponse>> getThirdPartyById(@PathVariable("thirdPartyId") String thirdPartyId) {
+        ApiResponse<ThirdPartyResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setData(thirdPartyService.getThirdPartyById(thirdPartyId));
+        apiResponse.setMessage("Successfully retrieved the third party.");
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PutMapping("/thirdparties/{id}")
+    public ApiResponse<ThirdPartyResponse> updateThirdParty(@PathVariable String id, @RequestBody ThirdPartyCreationRequest request) {
+        ApiResponse<ThirdPartyResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setData(thirdPartyService.updateThirdParty(id, request));
+        apiResponse.setMessage("Successfully updated the third party.");
+        return apiResponse;
+    }
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @DeleteMapping("/thirdparties/{thirdPartyId}")
+    public ApiResponse<String> deleteThirdParty(@PathVariable String thirdPartyId) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        apiResponse.setData("Third Party has been deleted");
+        thirdPartyService.deleteThirdParty(thirdPartyId);
+        return apiResponse;
+    }
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/related/thirdparties")
+    public ApiResponse<Map<String, Object>> getRelated(){
+        ApiResponse<Map<String, Object>> apiResponse = new ApiResponse<>();
+        Map<String, Object> listResponse = new HashMap<>();
+        apiResponse.setData(listResponse);
+        apiResponse.setMessage("Successfully get the employee's list");
+        return apiResponse;
     }
 
 }

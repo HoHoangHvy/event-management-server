@@ -33,11 +33,11 @@ public class DepartmentService {
     }
 
     public List<DepartmentListResponse> getAll() {
-        return departmentRepository.findAll().stream().map(departmentMapper::toDepartmentListResponse).collect(Collectors.toList());
+        return departmentRepository.findAllByDeletedFalse().stream().map(departmentMapper::toDepartmentListResponse).collect(Collectors.toList());
     }
 
     public List<OptionResponse> getAllOption() {
-        return departmentRepository.findAll().stream().map(departmentMapper::toOptionResponse).collect(Collectors.toList());
+        return departmentRepository.findAllByDeletedFalse().stream().map(departmentMapper::toOptionResponse).collect(Collectors.toList());
     }
 
     public DepartmentResponse getById(String id){

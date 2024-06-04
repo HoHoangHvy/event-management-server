@@ -61,12 +61,12 @@ public class RoleService {
             roleRepository.deleteById(id);
         }
     }
-    public List<RoleListResponse> findAll() {
-        return roleRepository.findAll().stream().map(roleMapper::toRoleListResponse).collect(Collectors.toList());
+    public List<RoleListResponse> findAllByDeletedFalse() {
+        return roleRepository.findAllByDeletedFalse().stream().map(roleMapper::toRoleListResponse).collect(Collectors.toList());
     }
 
     public List<OptionResponse> getAllOption() {
-        return roleRepository.findAll()
+        return roleRepository.findAllByDeletedFalse()
                 .stream()
                 .filter(role -> !role.getName().equals("ADMIN")) // Filter out roles with name "ADMIN"
                 .map(roleMapper::toOptionResponse)

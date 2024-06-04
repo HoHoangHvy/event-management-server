@@ -1,69 +1,84 @@
 package com.javasproject.eventmanagement.controller;
 
 import com.javasproject.eventmanagement.dto.request.ApiResponse;
-import com.javasproject.eventmanagement.entity.Dish;
+import com.javasproject.eventmanagement.dto.request.DishCreationRequest;
+import com.javasproject.eventmanagement.dto.response.DishResponse;
+import com.javasproject.eventmanagement.dto.response.ListResponse;
 import com.javasproject.eventmanagement.service.DishService;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequestMapping("/dishes")
+@RequestMapping("/api/")
 public class DishController {
-    @Autowired
-    DishService dishService;
-    @PostMapping
-    public ApiResponse<Dish> createDish(@RequestBody Dish dish){
-        return ApiResponse.<Dish>builder()
-                .data(dishService.upsert(dish))
-                .build();
-    }
-    @GetMapping("/{id}")
-    public ApiResponse<Dish> getDishById(@PathVariable String id){
-        String message = "Successfully get the dish";
-        Dish dish = dishService.getById(id);
-        if (dish == null){
-            message = "Not found this dish";
-        }
-        return ApiResponse.<Dish>builder()
-                .data(dish)
-                .message(message)
-                .build();
-    }
-    @GetMapping
-    public ApiResponse<List<Dish>> getAllDishes(){
-        String message = "Successfully get the dish list";
-        List<Dish> dishList = dishService.getDishList();
-        if(dishList.isEmpty()){
-            message = "Dish list is empty";
 
-        }
-        return ApiResponse.<List<Dish>>builder()
-                .data(dishList)
-                .message(message)
-                .build();
+    @Autowired
+    private DishService dishService;
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PostMapping("/dishes")
+    public ApiResponse<DishResponse> createDish(@RequestBody DishCreationRequest request) {
+        ApiResponse<DishResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setData(dishService.createDish(request));
+        apiResponse.setMessage("Successfully created the dish.");
+        return apiResponse;
     }
-    @PutMapping
-    public ApiResponse<Dish> updateDish(@RequestBody  Dish dish){
-        return ApiResponse.<Dish>builder()
-                .data(dishService.upsert(dish))
-                .build();
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/dishes")
+    public ApiResponse<ListResponse> getAllDishes() {
+        ApiResponse<ListResponse> apiResponse = new ApiResponse<>();
+        var listResponse = new ListResponse<DishResponse>();
+        List<DishResponse> dishes = dishService.getAllDishes();
+        long totalData = dishService.countAllDishes();
+        listResponse.setListData(dishes);
+        listResponse.setTotalData(totalData);
+
+        apiResponse.setData(listResponse);
+        apiResponse.setMessage("Successfully retrieved the dish list.");
+        return apiResponse;
     }
-    @DeleteMapping("/{id}")
-    public ApiResponse<String> deleteDish(@PathVariable String id){
-        String message = "Delete successfully";
-        Boolean status = dishService.deleteById(id);
-        if (!status){
-            message = "Delete fail! Not found this record";
-        }
-        return ApiResponse.<String>builder()
-                .message(message)
-                .build();
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/dishes/{dishId}")
+    public ResponseEntity<ApiResponse<DishResponse>> getDishById(@PathVariable("dishId") String dishId) {
+        ApiResponse<DishResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setData(dishService.getDishById(dishId));
+        apiResponse.setMessage("Successfully retrieved the dish.");
+        return ResponseEntity.ok(apiResponse);
     }
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PutMapping("/dishes/{id}")
+    public ApiResponse<DishResponse> updateDish(@PathVariable String id, @RequestBody DishCreationRequest request) {
+        ApiResponse<DishResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setData(dishService.updateDish(id, request));
+        apiResponse.setMessage("Successfully updated the dish.");
+        return apiResponse;
+    }
+
+    @CrossOrigin(origins = "http://localhost:4200")
+    @DeleteMapping("/dishes/{dishId}")
+    public ApiResponse<String> deleteDish(@PathVariable String dishId) {
+        ApiResponse<String> apiResponse = new ApiResponse<>();
+        apiResponse.setData("Dish has been deleted");
+        dishService.deleteDish(dishId);
+        return apiResponse;
+    }
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/related/dishes")
+    public ApiResponse<Map<String, Object>> getRelated(){
+        ApiResponse<Map<String, Object>> apiResponse = new ApiResponse<>();
+        Map<String, Object> listResponse = new HashMap<>();
+        apiResponse.setData(listResponse);
+        apiResponse.setMessage("Successfully get the employee's list");
+        return apiResponse;
+    }
+
 }

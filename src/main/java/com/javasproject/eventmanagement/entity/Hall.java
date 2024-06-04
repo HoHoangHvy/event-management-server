@@ -8,27 +8,25 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Entity
-@Table(name = "customers")
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@FieldDefaults( level = AccessLevel.PRIVATE)
-public class Customer {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
+@Table(name = "halls")
+public class Hall {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String name;
-    String phone;
-    String email;
-    String type;
-    LocalDate dob;
+    int scale;
+    String location;
     LocalDateTime dateEntered = LocalDateTime.now();
+    Boolean inUse = true;
     Boolean deleted = false;
 
-    @OneToMany(mappedBy = "customer")
-    Set<Event> events;
-
+    @OneToMany(mappedBy = "hall")
+    Set<Event> event;
 }

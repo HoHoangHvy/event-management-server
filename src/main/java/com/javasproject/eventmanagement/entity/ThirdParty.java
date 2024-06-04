@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,10 +23,11 @@ public class ThirdParty {
     String id;
     String name;
     String supplier;
-    String rebate;
+    Long cost;
+    Long price;
     String type;
     Boolean deleted = false;
-    LocalDate date_entered = LocalDate.now();
+    LocalDateTime dateEntered = LocalDateTime.now();
 
     @OneToMany(mappedBy = "thirdParty", cascade = CascadeType.ALL)
     private Set<EventDetailThirdParty> eventDetailThirdParties = new HashSet<>();

@@ -68,7 +68,7 @@ public class EventService {
     }
 
     public List<EventResponse> getEventList() {
-        return eventRepository.findAll().stream().map(eventMapper::toEventResponse).collect(Collectors.toList());
+        return eventRepository.findAllByDeletedFalse().stream().map(eventMapper::toEventResponse).collect(Collectors.toList());
     }
 
     public Boolean deleteById(String id){
@@ -84,8 +84,7 @@ public class EventService {
     public long countAllEvent(){
         return eventRepository.count();
     }
-
-    public Map<String, Object> getRelated(String employeeId) {
+    public Map<String, Object> getRelated() {
         List<OptionResponse> customerList = customerService.getAllOption();
         return Map.of("customerName", customerList);
     }

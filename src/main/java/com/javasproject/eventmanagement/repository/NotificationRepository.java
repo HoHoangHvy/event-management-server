@@ -19,4 +19,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Stri
 
     @Query("SELECT e FROM Notification e WHERE e.deleted != true AND e.isRead = false AND e.employee = :employee  ORDER BY e.date_entered DESC")
     List<Notification> findAllActiveUnreadByUserId(@Param("employee") Employee employee);
+
+
 }

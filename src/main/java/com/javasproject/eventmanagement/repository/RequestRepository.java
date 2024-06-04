@@ -20,7 +20,7 @@ public interface RequestRepository extends JpaRepository<Request, String> {
             "WHERE r.deleted != true AND e.department = :department ORDER BY r.date_entered DESC")
     List<Request> findAllActiveByDepartmentId(@Param("department") Department department);
 
-    List<Request> findAllByDeleted(Boolean deleted);
+    List<Request> findAllByDeletedFalse();
 
     @Query("SELECT r FROM Request r INNER JOIN RequestDepartment ed ON ed.request.id = r.id AND ed.deleted != true " +
             "WHERE r.deleted != true AND ed.department = :department ORDER BY r.date_entered DESC")

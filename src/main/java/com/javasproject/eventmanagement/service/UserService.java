@@ -59,7 +59,7 @@ public class UserService {
 
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserListResponse> getAllUsers(){
-        return userRepository.findAll().stream().map(userMapper::toUserListResponse).collect(Collectors.toList());
+        return userRepository.findAllByDeletedFalse().stream().map(userMapper::toUserListResponse).collect(Collectors.toList());
     }
     @PreAuthorize("hasRole('ADMIN')")
     public UserListResponse getUserById(String id){

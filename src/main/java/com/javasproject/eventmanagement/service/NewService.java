@@ -71,7 +71,7 @@ public class NewService {
     }
 
     public List<NewResponse> getAllNew() {
-        return newsRepository.findAllActive().stream().map(newsMapper::toNewResponse).collect(Collectors.toList());
+        return newsRepository.findAllByDeletedFalse().stream().map(newsMapper::toNewResponse).collect(Collectors.toList());
     }
 
     public NewResponse getNewById(String id) {

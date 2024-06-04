@@ -131,7 +131,7 @@ public class RequestService {
         } else if("Staff".equals(empLevel)) {
             return requestRepository.findAllActiveByUserId(currentEmp).stream().map(requestMapper::toRequestResponse).collect(Collectors.toList());
         }
-        return requestRepository.findAllByDeleted(false).stream().map(requestMapper::toRequestResponse).collect(Collectors.toList());
+        return requestRepository.findAllByDeletedFalse().stream().map(requestMapper::toRequestResponse).collect(Collectors.toList());
     }
     RequestDepartmentMapper requestDepartmentMapper;
     public RequestResponse getRequestById(String id) {

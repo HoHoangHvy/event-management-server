@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,8 +25,9 @@ public class Facility {
     long total;
     String type;
     long price;
-    LocalDate date_entered = LocalDate.now();
-
+    LocalDateTime dateEntered = LocalDateTime.now();
+    @Transient
+    long availableQuantity;
     Boolean deleted = false;
     @OneToMany(mappedBy = "facility", cascade = CascadeType.ALL)
     private Set<EventDetailFacility> eventDetailFacilities = new HashSet<>();

@@ -49,7 +49,7 @@ public class RoleController {
     @GetMapping("/roles")
     public ApiResponse<ListResponse> getAllRoles(){
         ListResponse listResponse = new ListResponse<RoleResponse>();
-        listResponse.setListData(roleService.findAll());
+        listResponse.setListData(roleService.findAllByDeletedFalse());
         listResponse.setTotalData(roleService.countAll());
         return ApiResponse.<ListResponse>builder()
                 .data(listResponse)

@@ -60,7 +60,7 @@ public class RequestDepartmentService {
         return true;
     }
     public List<RequestDepartmentResponse> getALlRequestDepartment() {
-        return requestDepartmentRepository.findAll().stream().map(rDMapper::toRequestDepartmentResponse).collect(Collectors.toList());
+        return requestDepartmentRepository.findAllByDeletedFalse().stream().map(rDMapper::toRequestDepartmentResponse).collect(Collectors.toList());
     }
     private NotificationService notificationService;
     private UserService userService;

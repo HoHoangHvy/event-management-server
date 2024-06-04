@@ -4,7 +4,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -12,13 +11,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CustomerResponse {
+public class DishResponse {
     String id;
     String name;
-    String phone;
-    String email;
-    String type;
-    String dob;
-    String dateEntered;
+    long price;
+    long cost;
+    String unit;
+    LocalDate dateEntered;
     Boolean deleted;
 }

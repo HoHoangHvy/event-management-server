@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Entity
@@ -22,9 +23,7 @@ public class User {
     String userName;
     String password;
     String status;
-    LocalDate date_entered = LocalDate.now();
-
-    @Column(nullable = true)
+    LocalDateTime dateEntered = LocalDateTime.now();
     Boolean deleted = false;
 
     @ManyToOne

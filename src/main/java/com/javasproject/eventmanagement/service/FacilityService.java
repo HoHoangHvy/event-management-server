@@ -1,42 +1,94 @@
 package com.javasproject.eventmanagement.service;
 
+import com.javasproject.eventmanagement.dto.request.FacilityCreationRequest;
+import com.javasproject.eventmanagement.dto.response.FacilityResponse;
+import com.javasproject.eventmanagement.dto.response.ResourceResponse;
 import com.javasproject.eventmanagement.entity.Facility;
+import com.javasproject.eventmanagement.entity.Resource;
+import com.javasproject.eventmanagement.entity.ResourceBookingDetail;
+import com.javasproject.eventmanagement.mapper.FacilityMapper;
 import com.javasproject.eventmanagement.repository.FacilityRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Service
 public class FacilityService {
-    @Autowired
-    private FacilityRepository facilityRepository;
-    public Facility upsert(Facility facility){
-        return facilityRepository.save(facility);
+    FacilityRepository facilityRepository;
+    FacilityMapper facilityMapper;
+
+    public FacilityResponse createFacility(FacilityCreationRequest request) {
+        Facility facility = facilityMapper.toFacility(request);
+        facility.setDateEntered(LocalDateTime.now());
+        facility.setDeleted(false);
+        Facility savedFacility = facilityRepository.save(facility);
+        return facilityMapper.toFacilityResponse(savedFacility);
     }
 
-    public Facility getById(String id){
-        Optional<Facility> findById = facilityRepository.findById(id);
-        return findById.orElse(null);
-    }
+    public FacilityResponse updateFacility(String facilityId, FacilityCreationRequest request) {
+        Facility facility = facilityRepository.findById(facilityId).orElseThrow(() -> new RuntimeException("Facility not found"));
 
-    public List<Facility> getFacilityList() {
-        return facilityRepository.findAll();
-    }
-
-    public Boolean deleteById(String id){
-        if(facilityRepository.existsById(id)){
-            facilityRepository.deleteById(id);
-            return true;
+        if (request.getName() != null) {
+            facility.setName(request.getName());
         }
-        else {
-            return false;
+        if (request.getTotal() > 0) {
+            facility.setTotal(request.getTotal());
         }
+        if (request.getType() != null) {
+            facility.setType(request.getType());
+        }
+        if (request.getPrice() > 0) {
+            facility.setPrice(request.getPrice());
+        }
+
+        return facilityMapper.toFacilityResponse(facilityRepository.save(facility));
     }
+
+    public void deleteFacility(String facilityId) {
+        Facility facility = facilityRepository.findById(facilityId).orElseThrow(() -> new RuntimeException("Facility not found"));
+        facility.setDeleted(true);
+        facilityRepository.save(facility);
+    }
+
+    public List<FacilityResponse> getAllFacilities() {
+        return facilityRepository.findAllByDeletedFalse().stream().map(facilityMapper::toFacilityResponse).collect(Collectors.toList());
+    }
+
+    public long countAllFacilities() {
+        return facilityRepository.count();
+    }
+
+    public FacilityResponse getFacilityById(String id) {
+        return facilityRepository.findById(id).map(facilityMapper::toFacilityResponse).orElseThrow(() -> new RuntimeException("Facility not found"));
+    }
+    private EventBookingService eventBookingService;
+    public List<FacilityResponse> getAllAvailableFacility(LocalDateTime startDate, LocalDateTime endDate) {
+        // Fetch all resources
+        List<Facility> allFacilities = facilityRepository.findAllByDeletedFalse();
+        // Filter out resources where the quantity is equal to the sum of its relationships
+        List<Facility> availableFacilities = allFacilities.stream()
+                .filter(facility -> {
+                    long bookedQuantity = eventBookingService.countBookedFacilityById(facility.getId(), startDate, endDate);
+                    return facility.getTotal() > bookedQuantity;
+                })
+                .map(facility -> {
+                    long bookedQuantity = eventBookingService.countBookedFacilityById(facility.getId(), startDate, endDate);
+                    facility.setAvailableQuantity(facility.getTotal() - bookedQuantity);
+                    return facility;
+                })
+                .collect(Collectors.toList());
+
+        // Convert the available resources to response DTOs
+        return availableFacilities.stream().map(facilityMapper::toFacilityResponse)
+                .collect(Collectors.toList());
+    }
+
 }

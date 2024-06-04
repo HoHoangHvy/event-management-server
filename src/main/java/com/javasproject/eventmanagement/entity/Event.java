@@ -31,6 +31,7 @@ public class Event {
     LocalDateTime endDate;
     Boolean deleted = false;
     String description;
+    String type;
     LocalDate date_entered = LocalDate.now();
 
     @Column(nullable = false)
@@ -57,5 +58,9 @@ public class Event {
 
     @OneToMany(mappedBy = "events")
     Set<Task> tasks;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idHall")
+    Hall hall;
 
 }

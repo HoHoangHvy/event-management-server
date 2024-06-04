@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface EventDetailRepository extends JpaRepository<EventDetails, String> {
     Optional<EventDetails> findById(String id);
+
 }

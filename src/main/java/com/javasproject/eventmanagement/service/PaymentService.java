@@ -30,7 +30,7 @@ public class PaymentService {
     }
 
     public List<Payment> getAllPayment(){
-        return paymentRepository.findAll();
+        return paymentRepository.findAllByDeletedFalse();
     }
 
     public Payment getPaymentById(String paymentId){

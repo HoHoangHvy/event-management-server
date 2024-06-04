@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,10 +53,10 @@ public class EventController {
     }
 
     @CrossOrigin(origins = "http://localhost:4200")
-    @GetMapping("/related/events/{eventId}")
-    public ApiResponse<Map<String, Object>> getRelated(@PathVariable("eventId") String eventId){
+    @GetMapping("/related/events")
+    public ApiResponse<Map<String, Object>> getRelated(){
         ApiResponse<Map<String, Object>> apiResponse = new ApiResponse<>();
-        Map<String, Object> listResponse = eventService.getRelated(eventId);
+        Map<String, Object> listResponse = eventService.getRelated();
         apiResponse.setData(listResponse);
         apiResponse.setMessage("Successfully get the employee's list");
         return apiResponse;
