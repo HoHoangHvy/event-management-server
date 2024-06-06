@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,5 +68,8 @@ public class ThirdPartyService {
 
     public ThirdPartyResponse getThirdPartyById(String id) {
         return thirdPartyRepository.findById(id).map(thirdPartyMapper::toThirdPartyResponse).orElseThrow(() -> new RuntimeException("Third Party not found"));
+    }
+    public ThirdParty getObjectById(String id) {
+        return thirdPartyRepository.findById(id).orElseThrow(() -> new RuntimeException("Third Party not found"));
     }
 }

@@ -3,7 +3,7 @@ package com.javasproject.eventmanagement.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 @Setter
 @Getter
 @NoArgsConstructor
@@ -15,8 +15,8 @@ public class EmployeeUpdateRequest {
     String empLevel;
     String gender;
     String status;
-    LocalDate dob;
-    LocalDate startDate;
+    LocalDateTime dob;
+    LocalDateTime startDate;
     String email;
     String name;
     String departmentId;

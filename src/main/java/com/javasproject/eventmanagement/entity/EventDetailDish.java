@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -19,7 +19,7 @@ public class EventDetailDish {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
-    LocalDate date_entered = LocalDate.now();
+    LocalDateTime date_entered = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "event_details_id")

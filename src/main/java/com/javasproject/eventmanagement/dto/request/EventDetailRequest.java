@@ -3,7 +3,6 @@ package com.javasproject.eventmanagement.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @Setter
@@ -12,14 +11,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class EventCreationRequest {
-    String name;
-    LocalDateTime startDate;
-    LocalDateTime endDate;
-    String description;
-    String hallId;
+public class EventDetailRequest {
     String type;
-    String customerId;
     Set<EventDetailCreationRequest> dishDetails;
     Set<EventDetailCreationRequest> facilityDetails;
     Set<EventDetailCreationRequest> thirdpartyDetails;

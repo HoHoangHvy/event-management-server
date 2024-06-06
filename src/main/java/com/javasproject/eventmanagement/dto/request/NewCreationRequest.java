@@ -3,7 +3,7 @@ package com.javasproject.eventmanagement.dto.request;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -11,5 +11,5 @@ public class NewCreationRequest {
     String name;
     String type;
     String content;
-    LocalDate createDate;
+    LocalDateTime createDate;
 }

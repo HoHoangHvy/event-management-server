@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,6 +18,6 @@ public class DishResponse {
     long price;
     long cost;
     String unit;
-    LocalDate dateEntered;
+    String dateEntered;
     Boolean deleted;
 }

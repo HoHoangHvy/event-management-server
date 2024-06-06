@@ -38,6 +38,20 @@ public class EventController {
         return apiResponse;
     }
     @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/events-schedule")
+    public ApiResponse<ListResponse> getEventsSchedule() {
+        ApiResponse<ListResponse> apiResponse = new ApiResponse<>();
+        var listResponse = new ListResponse<EventResponse>();
+        List<EventResponse> events = eventService.getApprovedEvent();
+        long totalData = eventService.countAllApprovedEvent();
+        listResponse.setListData(events);
+        listResponse.setTotalData(totalData);
+
+        apiResponse.setData(listResponse);
+        apiResponse.setMessage("Successfully get the event's list");
+        return apiResponse;
+    }
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/events")
     public ApiResponse<EventResponse> createEvent(@RequestBody EventCreationRequest requestEvent) {
         return ApiResponse.<EventResponse>builder()

@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -22,7 +22,7 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String name;
-    LocalDate date_entered = LocalDate.now();
+    LocalDateTime date_entered = LocalDateTime.now();
 
     @Column(nullable = true)
     Boolean deleted = false;

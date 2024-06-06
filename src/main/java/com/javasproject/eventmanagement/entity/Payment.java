@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "payments")
@@ -21,10 +21,10 @@ public class Payment {
     String name;
     String type;
     String status;
-    LocalDate paymentDate;
+    LocalDateTime paymentDate;
     String paymentMethod;
     Boolean deleted = false;
-    LocalDate date_entered = LocalDate.now();
+    LocalDateTime date_entered = LocalDateTime.now();
     long value;
     @ManyToOne
     @JoinColumn(name = "createdBy")

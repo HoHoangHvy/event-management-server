@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -32,7 +32,7 @@ public class Event {
     Boolean deleted = false;
     String description;
     String type;
-    LocalDate date_entered = LocalDate.now();
+    LocalDateTime date_entered = LocalDateTime.now();
 
     @Column(nullable = false)
     String status;

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -30,6 +30,6 @@ public class EventDetailFacility {
     // Additional fields
     Long quantity;
     Long bookingPrice;
-    LocalDate date_entered = LocalDate.now();
+    LocalDateTime date_entered = LocalDateTime.now();
 
 }

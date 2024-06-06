@@ -3,6 +3,8 @@ package com.javasproject.eventmanagement.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Set;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -20,4 +22,7 @@ public class EventResponse {
     String createdByName;
     String approvedByName;
     String customerName;
+    String customerId;
+    String hallId;
+    String hallName;
 }

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -24,7 +24,7 @@ public class Customer {
     String phone;
     String email;
     String type;
-    LocalDate dob;
+    LocalDateTime dob;
     LocalDateTime dateEntered = LocalDateTime.now();
     Boolean deleted = false;
 

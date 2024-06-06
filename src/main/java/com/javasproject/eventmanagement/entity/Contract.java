@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -31,7 +31,7 @@ public class Contract {
     String terms;
     long sumPaid;
     Boolean deleted = false;
-    LocalDate date_entered = LocalDate.now();
+    LocalDateTime date_entered = LocalDateTime.now();
 
     //    String createdBy;
     @OneToOne(mappedBy = "contract")

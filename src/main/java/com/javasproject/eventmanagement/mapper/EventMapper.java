@@ -13,6 +13,9 @@ public interface EventMapper {
     @Mapping(target = "createdByName", source = "createdBy.name")
     @Mapping(target = "approvedByName", source = "approvedBy.name")
     @Mapping(target = "customerName", source = "customer.name")
+    @Mapping(target = "customerId", source = "customer.id")
+    @Mapping(target = "hallName", source = "hall.name")
+    @Mapping(target = "hallId", source = "hall.id")
     @Mapping(target = "startDate", source = "startDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @Mapping(target = "endDate", source = "endDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
     EventResponse toEventResponse(Event event);

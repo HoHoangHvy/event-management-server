@@ -87,4 +87,8 @@ public class HallService {
                 .collect(Collectors.toList());
     }
 
+    public Hall getHallObjectById(String id) {
+        return hallRepository.findById(id).orElse(null);
+    }
+
 }

@@ -5,7 +5,7 @@ import com.javasproject.eventmanagement.enums.RoleEnum;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter

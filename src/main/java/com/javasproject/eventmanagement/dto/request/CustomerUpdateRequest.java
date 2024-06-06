@@ -3,7 +3,7 @@ package com.javasproject.eventmanagement.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -16,5 +16,5 @@ public class CustomerUpdateRequest {
     String phone;
     String email;
     String type;
-    LocalDate dob;
+    LocalDateTime dob;
 }

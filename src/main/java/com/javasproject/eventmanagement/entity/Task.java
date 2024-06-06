@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tasks")
@@ -21,14 +22,14 @@ public class Task {
     String name;
     String type;
     String status;
-    LocalDate startDate;
-    LocalDate dueDate;
-    LocalDate finishedDate;
+    LocalDateTime startDate;
+    LocalDateTime dueDate;
+    LocalDateTime finishedDate;
     String priority;
     String description;
     String progress;
     Boolean deleted = false;
-    LocalDate date_entered = LocalDate.now();
+    LocalDateTime date_entered = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "idEvent")

@@ -3,7 +3,7 @@ package com.javasproject.eventmanagement.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -14,6 +14,6 @@ import java.time.LocalDate;
 public class PaymentCreationRequest {
     String name;
     String type;
-    LocalDate paymentDate;
+    LocalDateTime paymentDate;
     int value;
 }

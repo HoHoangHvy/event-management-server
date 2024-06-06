@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -36,7 +36,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
     List<Employee> findAllByDobMonthAndDay(@Param("month") int month, @Param("day") int day);
 
     default List<Employee> findAllWithDobToday() {
-        LocalDate today = LocalDate.now();
+        LocalDateTime today = LocalDateTime.now();
         int month = today.getMonthValue();
         int day = today.getDayOfMonth();
         return findAllByDobMonthAndDay(month, day);

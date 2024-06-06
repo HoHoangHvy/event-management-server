@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,5 +65,8 @@ public class DishService {
 
     public DishResponse getDishById(String id) {
         return dishRepository.findById(id).map(dishMapper::toDishResponse).orElseThrow(() -> new RuntimeException("Dish not found"));
+    }
+    public Dish getObjectById(String id) {
+        return dishRepository.findById(id).orElseThrow(() -> new RuntimeException("Dish not found"));
     }
 }

@@ -12,11 +12,8 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventDetailCreationRequest {
-    String name;
     long price;
-    long cost;
-    String type;
-    Set<String> dishes;
-    Set<String> facilities;
-    Set<String> thirdparties;
+    long quantityValue;
+    long totalValue;
+    String value;
 }

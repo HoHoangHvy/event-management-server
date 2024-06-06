@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -25,12 +25,12 @@ public class Employee {
     String empLevel;
     String gender;
     String status;
-    LocalDate dob;
-    LocalDate startDate;
+    LocalDateTime dob;
+    LocalDateTime startDate;
     String email;
     @Column(nullable = true)
     Boolean deleted = false;
-    LocalDate date_entered = LocalDate.now();
+    LocalDateTime date_entered = LocalDateTime.now();
 
 
     @OneToOne(mappedBy = "employee")

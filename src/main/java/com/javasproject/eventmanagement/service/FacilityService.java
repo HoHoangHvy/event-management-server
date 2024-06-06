@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,6 +68,9 @@ public class FacilityService {
 
     public FacilityResponse getFacilityById(String id) {
         return facilityRepository.findById(id).map(facilityMapper::toFacilityResponse).orElseThrow(() -> new RuntimeException("Facility not found"));
+    }
+    public Facility getObjectById(String id) {
+        return facilityRepository.findById(id).orElseThrow(() -> new RuntimeException("Facility not found"));
     }
     private EventBookingService eventBookingService;
     public List<FacilityResponse> getAllAvailableFacility(LocalDateTime startDate, LocalDateTime endDate) {
