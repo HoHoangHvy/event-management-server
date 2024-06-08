@@ -20,12 +20,12 @@ public class Payment {
     String id;
     String name;
     String type;
-    String status;
+    String status = "Unpaid";
     LocalDateTime paymentDate;
     String paymentMethod;
     Boolean deleted = false;
-    LocalDateTime date_entered = LocalDateTime.now();
-    long value;
+    LocalDateTime dateEntered = LocalDateTime.now();
+    double value;
     @ManyToOne
     @JoinColumn(name = "createdBy")
     Employee createdBy;

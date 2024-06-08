@@ -1,16 +1,15 @@
-package com.javasproject.eventmanagement.dto.response;
+package com.javasproject.eventmanagement.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OptionResponse {
-    String label;
-    String value;
-    double price;
+public class PaymentUpdateRequest {
+    String status;
+    String paymentMethod;
 }

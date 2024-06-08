@@ -75,4 +75,12 @@ public class EventController {
         apiResponse.setMessage("Successfully get the employee's list");
         return apiResponse;
     }
+    @CrossOrigin(origins = "http://localhost:4200")
+    @GetMapping("/option/events")
+    public ApiResponse<Map<String, EventResponse>> getOptions(){
+        ApiResponse<Map<String, EventResponse>> apiResponse = new ApiResponse<>();
+        Map<String, EventResponse> listResponse = eventService.getAllOptionsDetail();
+        apiResponse.setData(listResponse);
+        return apiResponse;
+    }
 }

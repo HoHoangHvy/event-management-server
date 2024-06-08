@@ -141,11 +141,35 @@ public class EventService {
     public long countAllApprovedEvent(){
         return eventRepository.countAllApprovedEvent();
     }
+    public Event getObjectById(String id) {
+        return eventRepository.findById(id).orElse(null);
+    }
     public List<EventResponse> getApprovedEvent() {
         return eventRepository.findEventSchedule().stream().map(eventMapper::toEventResponse).collect(Collectors.toList());
     }
     public Map<String, Object> getRelated() {
         List<OptionResponse> customerList = customerService.getAllOption();
         return Map.of("customerName", customerList);
+    }
+
+    public List<OptionResponse> getAllOptions() {
+        return eventRepository.findAllByDeletedFalseAndStatusDraft().stream().map(eventMapper::toOptionResponse).collect(Collectors.toList());
+    }
+
+    public Map<String, EventResponse> getAllOptionsDetail() {
+        return eventRepository.findAllByDeletedFalseAndStatusDraft().stream()
+                .map(eventMapper::toEventResponse)
+                .map(eventResponse -> {
+                    eventResponse.setTotalAmount(eventDetailService.calculateTotalAmount(eventResponse.getId()));
+                    return eventResponse;
+                })
+                .collect(Collectors.toMap(EventResponse::getId, eventResponse -> eventResponse));
+    }
+
+    public Event updateEventStatus(String eventId, String status) {
+        return eventRepository.findById(eventId).map(event -> {
+            event.setStatus(status);
+            return eventRepository.save(event);
+        }).orElseThrow(() -> new RuntimeException("Event not found"));
     }
 }

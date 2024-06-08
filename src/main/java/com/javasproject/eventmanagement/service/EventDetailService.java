@@ -120,4 +120,8 @@ public class EventDetailService {
         return eventDetailRepository.save(eventDetails);
     }
 
+    double calculateTotalAmount(String eventId) {
+        return eventDetailRepository.calculateTotalAmount(eventId);
+    }
+
 }

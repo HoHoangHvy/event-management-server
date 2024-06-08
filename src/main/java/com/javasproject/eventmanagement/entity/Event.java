@@ -48,8 +48,7 @@ public class Event {
     @OneToMany(mappedBy = "events")
     Set<EventDetails> eventDetails;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idContract", referencedColumnName = "id")
+    @OneToOne(mappedBy = "event")
     Contract contract;
 
     @ManyToOne(fetch = FetchType.LAZY)

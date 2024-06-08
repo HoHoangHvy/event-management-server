@@ -16,6 +16,7 @@ public enum ErrorCode {
     RESOURCE_NOT_FOUND(1010, "News is not existed"),
     NOTIFICATION_NOT_FOUND(1011, "News is not existed"),
     REQUEST_NOT_FOUND(1012, "News is not existed"),
+    HAVE_PAID_PAYMENT(1013, "This contracts have the paid payment"),
     ;
     private int code;
     private String message;

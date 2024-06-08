@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
@@ -21,20 +22,23 @@ public class Contract {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String name;
-    Date dateCreated;
-    Date companySignedDate;
-    Date customerSignedDate;
-    Date expirationDate;
+    LocalDateTime dateCreated;
+    LocalDateTime companySignedDate;
+    LocalDateTime customerSignedDate;
+    LocalDate expirationDate;
     String status;
-    long totalValue;
-    int discount;
+    double totalValue;
+    double netValue;
+    double taxValue;
+    double discount;
     String terms;
-    long sumPaid;
+    double sumPaid = 0;
     Boolean deleted = false;
-    LocalDateTime date_entered = LocalDateTime.now();
-
+    LocalDateTime dateEntered = LocalDateTime.now();
+    String paymentTerm;
     //    String createdBy;
-    @OneToOne(mappedBy = "contract")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "idEvent", referencedColumnName = "id")
     Event event;
     @OneToMany(mappedBy = "contract")
     Set<Payment> payment;
