@@ -177,6 +177,7 @@ public class EventService {
     public Boolean approveEvent(String eventId) {
         Event eventObject = eventRepository.findById(eventId).map(event -> {
             event.setStatus("Approved");
+            event.setApprovedBy(userService.getCurrentUser().getEmployee());
             return eventRepository.save(event);
         }).orElseThrow(() -> new RuntimeException("Event not found"));
 
