@@ -13,4 +13,5 @@ public class OptionResponse {
     String label;
     String value;
     double price;
+    String status;
 }

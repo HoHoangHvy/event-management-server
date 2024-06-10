@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,21 +75,29 @@ public class FacilityService {
         return facilityRepository.findById(id).orElseThrow(() -> new RuntimeException("Facility not found"));
     }
     private EventBookingService eventBookingService;
+    public LocalDateTime convertTimeZone(LocalDateTime localDateTime){
+        // Convert LocalDateTime to ZonedDateTime with UTC time zone
+        ZonedDateTime utcDateTime = localDateTime.atZone(ZoneId.of("UTC"));
+
+        // Convert UTC time to GMT+7 (Asia/Ho_Chi_Minh) time zone
+        ZonedDateTime gmtPlus7DateTime = utcDateTime.withZoneSameInstant(ZoneId.of("Asia/Ho_Chi_Minh"));
+        return gmtPlus7DateTime.toLocalDateTime();
+    }
     public List<FacilityResponse> getAllAvailableFacility(LocalDateTime startDate, LocalDateTime endDate) {
         // Fetch all resources
         List<Facility> allFacilities = facilityRepository.findAllByDeletedFalse();
         // Filter out resources where the quantity is equal to the sum of its relationships
         List<Facility> availableFacilities = allFacilities.stream()
                 .filter(facility -> {
-                    long bookedQuantity = eventBookingService.countBookedFacilityById(facility.getId(), startDate, endDate);
+                    long bookedQuantity = eventBookingService.countBookedFacilityById(facility.getId(), convertTimeZone(startDate), convertTimeZone(endDate));
                     return facility.getTotal() > bookedQuantity;
                 })
                 .map(facility -> {
-                    long bookedQuantity = eventBookingService.countBookedFacilityById(facility.getId(), startDate, endDate);
+                    long bookedQuantity = eventBookingService.countBookedFacilityById(facility.getId(), convertTimeZone(startDate), convertTimeZone(endDate));
                     facility.setAvailableQuantity(facility.getTotal() - bookedQuantity);
                     return facility;
                 })
-                .collect(Collectors.toList());
+                .toList();
 
         // Convert the available resources to response DTOs
         return availableFacilities.stream().map(facilityMapper::toFacilityResponse)

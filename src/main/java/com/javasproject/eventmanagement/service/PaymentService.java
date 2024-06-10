@@ -18,6 +18,7 @@ import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -48,7 +49,7 @@ public class PaymentService {
         Payment payment = paymentRepository.findById(paymentId).orElseThrow(() -> new RuntimeException("Payment not found"));
 
         if (request.getStatus() != null) {
-
+            //Paid payment
             if(request.getStatus().equals("Paid")){
                 if (request.getPaymentMethod() != null) {
                     payment.setPaymentMethod(request.getPaymentMethod());
@@ -61,19 +62,30 @@ public class PaymentService {
                     contractRepository.updateContractStatus(payment.getContract().getId(), "Deposited");
                     eventRepository.updateEventStatus(payment.getContract().getEvent().getId(), "Wait for approval");
                 }
+                if(!payment.getType().equals("Deposit")){
+                    contractRepository.updateContractStatusPartPaid();
+                }
+                contractRepository.updateContractStatusFullyPaid();
+                if(payment.getContract().getPayment().size() == 1){
+                    eventRepository.updateEventStatus(payment.getContract().getEvent().getId(), "Wait for approval");
+                }
             }
-
+            //Void payment
             if(request.getStatus().equals("Unpaid") && payment.getStatus().equals("Paid")){
                 payment.setStatus("Unpaid");
                 payment.setPaymentMethod(null);
                 payment.setPaymentDate(null);
                 payment.setConfirmedBy(null);
                 contractRepository.updateDecreaseContractSumPaid(payment.getContract().getId(), payment.getValue());
+                if(payment.getType().equals("Deposit") || payment.getContract().getPayment().stream().filter(item -> item.getStatus().equals("Paid")).count() == 0){
+                    contractRepository.updateContractStatus(payment.getContract().getId(), "Draft");
+                    eventRepository.updateEventStatus(payment.getContract().getEvent().getId(), "Contracted");
+                }
             }
-            if(!payment.getType().equals("Deposit")){
-                contractRepository.updateContractStatusPartPaid();
+            if(payment.getContract().getPayment().stream().filter(item -> item.getStatus().equals("Paid")).count() == 1
+                    && payment.getContract().getPayment().stream().filter(item -> item.getStatus().equals("Paid") && Objects.equals(item.getType(), "Deposit")).count() == 1){
+                contractRepository.updateContractStatus(payment.getContract().getId(), "Deposited");
             }
-            contractRepository.updateContractStatusFullyPaid();
         }
 
         return paymentMapper.toPaymentResponse(paymentRepository.save(payment));

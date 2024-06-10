@@ -36,5 +36,7 @@ public class ContractResponse {
     Boolean taxable;
     String dateEntered;
     String paymentTerm;
+    String eventId;
+    String eventName;
     Set<PaymentResponse> payments;
 }

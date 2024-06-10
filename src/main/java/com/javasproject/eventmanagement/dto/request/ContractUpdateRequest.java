@@ -5,7 +5,6 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Setter
 @Getter
@@ -15,10 +14,7 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ContractUpdateRequest {
     LocalDate expirationDate;
-    long discount;
     String terms;
-    String status;
-    LocalDateTime companySignedDate;
-    LocalDateTime customerSignedDate;
-    long sumPaid;
+    LocalDate companySignedDate;
+    LocalDate customerSignedDate;
 }

@@ -40,4 +40,9 @@ public interface ContractRepository extends JpaRepository<Contract, String> {
     @Transactional
     @Query("update Contract c set c.status = 'Part Paid' where c.sumPaid < c.totalValue")
     int updateContractStatusPartPaid();
+
+    @Modifying
+    @Transactional
+    @Query("update Contract c set c.status = 'Deposited' where c.sumPaid < c.totalValue")
+    int updateContractStatusDeposited();
 }

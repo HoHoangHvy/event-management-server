@@ -25,5 +25,7 @@ public class EventResponse {
     String customerId;
     String hallId;
     String hallName;
+    String contractName;
+    String contractId;
     double totalAmount;
 }

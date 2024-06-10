@@ -22,8 +22,8 @@ public interface ContractMapper {
 
     @Mapping(target = "dateEntered", source = "dateEntered", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @Mapping(target = "expirationDate", source = "expirationDate", dateFormat = "yyyy-MM-dd")
-    @Mapping(target = "companySignedDate", source = "companySignedDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
-    @Mapping(target = "customerSignedDate", source = "customerSignedDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @Mapping(target = "companySignedDate", source = "companySignedDate", dateFormat = "yyyy-MM-dd")
+    @Mapping(target = "customerSignedDate", source = "customerSignedDate", dateFormat = "yyyy-MM-dd")
     @Mapping(target = "totalValue", source = "totalValue", qualifiedByName = "formatToVND")
     @Mapping(target = "sumPaid", source = "sumPaid", qualifiedByName = "formatToVND")
     @Mapping(target = "discount", source = "discount", qualifiedByName = "formatToVND")
@@ -36,6 +36,8 @@ public interface ContractMapper {
     @Mapping(target = "payments", source = "payment", qualifiedByName = "mapPayments")
     @Mapping(target = "taxValueNumber", source = "taxValue")
     @Mapping(target = "netTotalValueNumber", source = "netValue")
+    @Mapping(target = "eventId", source = "event.id")
+    @Mapping(target = "eventName", source = "event.name")
     ContractResponse toContractResponse(Contract contracts);
 
     @Mapping(target = "dateEntered", source = "dateEntered", dateFormat = "yyyy-MM-dd HH:mm:ss")
@@ -67,7 +69,6 @@ public interface ContractMapper {
     @IterableMapping(qualifiedByName = "toPaymentResponse")
     static Set<PaymentResponse> mapPayments(Set<Payment> payments) {
         return payments.stream()
-//                .sorted(Comparator.comparing(Payment::getDateEntered)) // Sort by dateEntered
                 .map(PaymentMapper.INSTANCE::toPaymentResponse)
                 .collect(Collectors.toSet());
     }

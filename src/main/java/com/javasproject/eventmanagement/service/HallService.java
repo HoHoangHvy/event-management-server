@@ -15,6 +15,8 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,13 +74,21 @@ public class HallService {
     public List<OptionResponse> getAllOptions() {
         return hallRepository.findAllByDeletedFalse().stream().map(hallMapper::toOptionResponse).collect(Collectors.toList());
     }
+    public LocalDateTime convertTimeZone(LocalDateTime localDateTime){
+        // Convert LocalDateTime to ZonedDateTime with UTC time zone
+        ZonedDateTime utcDateTime = localDateTime.atZone(ZoneId.of("UTC"));
+
+        // Convert UTC time to GMT+7 (Asia/Ho_Chi_Minh) time zone
+        ZonedDateTime gmtPlus7DateTime = utcDateTime.withZoneSameInstant(ZoneId.of("Asia/Ho_Chi_Minh"));
+        return gmtPlus7DateTime.toLocalDateTime();
+    }
     public List<HallResponse> getAllAvailableHalls(LocalDateTime startDate, LocalDateTime endDate) {
         // Fetch all resources
         List<Hall> allResources = hallRepository.findAllByDeletedFalse();
         // Filter out resources where the quantity is equal to the sum of its relationships
         List<Hall> availableResources = allResources.stream()
                 .filter(hall -> hall.getEvent().stream()
-                        .noneMatch(booking -> booking.getStartDate().isBefore(endDate) && booking.getEndDate().isAfter(startDate)))
+                        .noneMatch(booking -> booking.getStartDate().isBefore(convertTimeZone(endDate)) && booking.getEndDate().isAfter(convertTimeZone(startDate))))
                 .collect(Collectors.toList());
 
         // Convert the available resources to response DTOs

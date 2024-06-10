@@ -22,9 +22,8 @@ public class Contract {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String name;
-    LocalDateTime dateCreated;
-    LocalDateTime companySignedDate;
-    LocalDateTime customerSignedDate;
+    LocalDate companySignedDate;
+    LocalDate customerSignedDate;
     LocalDate expirationDate;
     String status;
     double totalValue;

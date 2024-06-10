@@ -51,6 +51,7 @@ public class ContractService {
         contracts.setExpirationDate(request.getExpirationDate().plusDays(1));
         contracts.setStatus("Draft");
         contracts.setTerms(request.getTerms());
+        contracts.setDiscount(request.getDiscount());
         contracts.setPaymentTerm(request.getPaymentTerm());
         contracts.setEvent(eventService.getObjectById(request.getEventId()));
         double netValue = eventService.getObjectById(request.getEventId()).getEventDetails().stream().mapToLong(EventDetails::getPrice).sum() - contracts.getDiscount();
@@ -112,29 +113,18 @@ public class ContractService {
     public ContractResponse updateContract(String contractsId, ContractUpdateRequest request) {
         Contract contracts = contractsRepository.findById(contractsId).orElseThrow(() -> new RuntimeException("Contract not found"));
 
-
         if (request.getCompanySignedDate() != null) {
-            contracts.setCompanySignedDate(request.getCompanySignedDate());
+            contracts.setCompanySignedDate(request.getCompanySignedDate().plusDays(1));
         }
         if (request.getCustomerSignedDate() != null) {
-            contracts.setCustomerSignedDate(request.getCustomerSignedDate());
+            contracts.setCustomerSignedDate(request.getCustomerSignedDate().plusDays(1));
         }
         if (request.getExpirationDate() != null) {
-            contracts.setExpirationDate(request.getExpirationDate());
-        }
-        if (request.getStatus() != null) {
-            contracts.setStatus(request.getStatus());
-        }
-        if (request.getDiscount() > 0) {
-            contracts.setDiscount(request.getDiscount());
+            contracts.setExpirationDate(request.getExpirationDate().plusDays(1));
         }
         if (request.getTerms() != null) {
             contracts.setTerms(request.getTerms());
         }
-        if (request.getSumPaid() > 0) {
-            contracts.setSumPaid(request.getSumPaid());
-        }
-
         return contractsMapper.toContractResponse(contractsRepository.save(contracts));
     }
 

@@ -3,6 +3,7 @@ package com.javasproject.eventmanagement.service;
 import com.javasproject.eventmanagement.dto.request.EventCreationRequest;
 import com.javasproject.eventmanagement.dto.request.EventDetailCreationRequest;
 import com.javasproject.eventmanagement.dto.request.EventDetailRequest;
+import com.javasproject.eventmanagement.dto.request.NotificationCreationRequest;
 import com.javasproject.eventmanagement.dto.response.EventResponse;
 import com.javasproject.eventmanagement.dto.response.OptionResponse;
 import com.javasproject.eventmanagement.entity.Event;
@@ -153,7 +154,7 @@ public class EventService {
     }
 
     public List<OptionResponse> getAllOptions() {
-        return eventRepository.findAllByDeletedFalseAndStatusDraft().stream().map(eventMapper::toOptionResponse).collect(Collectors.toList());
+        return eventRepository.findAllByDeletedFalse().stream().map(eventMapper::toOptionResponse).collect(Collectors.toList());
     }
 
     public Map<String, EventResponse> getAllOptionsDetail() {
@@ -171,5 +172,23 @@ public class EventService {
             event.setStatus(status);
             return eventRepository.save(event);
         }).orElseThrow(() -> new RuntimeException("Event not found"));
+    }
+    NotificationService notificationService;
+    public Boolean approveEvent(String eventId) {
+        Event eventObject = eventRepository.findById(eventId).map(event -> {
+            event.setStatus("Approved");
+            return eventRepository.save(event);
+        }).orElseThrow(() -> new RuntimeException("Event not found"));
+
+        NotificationCreationRequest notiRequest = new NotificationCreationRequest();
+        notiRequest.setName("Event " + eventObject.getName() + " has been approved");
+        notiRequest.setContent("Event " + eventObject.getName() + " has been approved, please check and create tasks");
+        notiRequest.setParentId(eventObject.getId());
+        notiRequest.setType("Notice");
+        notiRequest.setParentType("Event");
+        notiRequest.setEmployeeId(eventObject.getCreatedBy().getId());
+        notificationService.createNotification(notiRequest);
+
+        return true;
     }
 }

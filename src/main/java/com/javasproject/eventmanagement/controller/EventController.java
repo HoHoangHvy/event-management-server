@@ -59,6 +59,13 @@ public class EventController {
                 .build();
     }
     @CrossOrigin(origins = "http://localhost:4200")
+    @PutMapping("/events/{id}")
+    public ApiResponse<Boolean> approveEvent(@PathVariable String id,@RequestBody EventCreationRequest requestEvent) {
+        return ApiResponse.<Boolean>builder()
+                .data(eventService.approveEvent(id))
+                .build();
+    }
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/events/{id}")
     public ApiResponse<EventResponse> getEventById(@PathVariable String id) {
         return ApiResponse.<EventResponse>builder()
